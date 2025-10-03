@@ -1,10 +1,12 @@
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static UnityEngine.InputSystem.InputAction;
 public class MenuController : MonoBehaviour
 {
-    public Rigidbody player;
+    [Header("Controlador de menu")]
+    [Tooltip("Menu UI para el modo debug")]
     public GameObject debugUI;
     public static bool debug = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
