@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
     public float moveSpeed = 10;
     [Range(10, 100)]
     public float jumpForce = 20;
+    public int maxJumps = 2;
+    public int jumpsRemaining;
     private Rigidbody _rigidBody;
     private PlayerInput playerInput;
     private float direction;
@@ -21,11 +23,17 @@ public class Player : MonoBehaviour
     {
         _rigidBody = gameObject.GetComponent<Rigidbody>();
         playerInput = gameObject.GetComponent<PlayerInput>();
+        jumpsRemaining = maxJumps;
     }
 
     void Update()
     {
         direction = playerInput.actions["Movement"].ReadValue<float>();
+
+        if (playerInput.actions["jump"].triggered)
+        {
+            TryJump();
+        }
 
     }
 
@@ -55,6 +63,7 @@ public class Player : MonoBehaviour
             {
                 {
                     inGround = true;
+                    jumpsRemaining = maxJumps;
                 }
             }
         }
@@ -75,14 +84,21 @@ public class Player : MonoBehaviour
             moveInput = context.ReadValue<float>();
         }
     }
-    public void Jump()
+    private void TryJump()
     {
-        if (inGround)
-        {
-            _rigidBody.linearVelocity = new Vector2(_rigidBody.linearVelocity.x, 0);
-            _rigidBody.AddForce(100 * jumpForce * transform.up);
 
-        }
+        if (jumpsRemaining <= 0)
+            return;
+
+        DoJump();
+        jumpsRemaining--;
+        inGround = false;
+    }
+
+    private void DoJump()
+    {
+        _rigidBody.linearVelocity = new Vector2(_rigidBody.linearVelocity.x, 0);
+        _rigidBody.AddForce(100 * jumpForce * transform.up);
     }
 
     public void Crouch()

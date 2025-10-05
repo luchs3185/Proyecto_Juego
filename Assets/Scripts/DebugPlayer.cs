@@ -7,6 +7,7 @@ public class DebugPlayer : MonoBehaviour
     private Rigidbody playerRG;
     public Text speedText;
     public Text groundText;
+
     void Start()
     {
         playerRG = player.GetComponent<Rigidbody>();
@@ -14,7 +15,7 @@ public class DebugPlayer : MonoBehaviour
 
     void Update()
     {
-        speedText.text ="Speed: X(" + playerRG.linearVelocity.x.ToString("F3") + ") Y(" + playerRG.linearVelocity.y.ToString("F3")+")"; 
+        speedText.text = "Speed: X(" + playerRG.linearVelocity.x.ToString("F3") + ") Y(" + playerRG.linearVelocity.y.ToString("F3") + ")";
         groundText.text = "Ground: " + Player.inGround;
         
     }
