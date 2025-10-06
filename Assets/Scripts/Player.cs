@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     [Range(5, 20)]
     public float moveSpeed = 10;
     [Range(10, 100)]
-    public float jumpForce = 20;
+    public float jumpForce = 30;
     public int maxJumps = 2;
     public int jumpsRemaining;
     private Rigidbody _rigidBody;

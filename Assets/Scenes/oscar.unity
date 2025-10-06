@@ -852,11 +852,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6330609796159201891, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
   m_PrefabInstance: {fileID: 2642398287520389301}
   m_PrefabAsset: {fileID: 0}
---- !u!54 &1340916361 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 6763475425995730947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
-  m_PrefabInstance: {fileID: 2642398287520389301}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1407287832
 GameObject:
   m_ObjectHideFlags: 0
@@ -1198,7 +1193,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffa4e5305471172ef8fd1ad3a0cc7e7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DebugPlayer
-  player: {fileID: 1340916361}
   debugUI: {fileID: 811765635}
 --- !u!4 &1533448061
 Transform:
@@ -1759,7 +1753,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7936594041477022980, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
       propertyPath: jumpForce
-      value: 38.8
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 7936594041477022980, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
       propertyPath: moveSpeed
