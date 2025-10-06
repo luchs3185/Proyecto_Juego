@@ -1,0 +1,35 @@
+{
+    "version": 1,
+    "name": "MenuActions",
+    "maps": [
+        {
+            "name": "Menu",
+            "id": "a90ee0d0-5f6b-40ee-9fda-3f471087e655",
+            "actions": [
+                {
+                    "name": "Show Debug Info",
+                    "type": "Button",
+                    "id": "ea299e24-71ad-46be-b95b-94b68080c771",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "4094c0de-d80f-4d76-8d44-bef576251051",
+                    "path": "<Keyboard>/k",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Show Debug Info",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
