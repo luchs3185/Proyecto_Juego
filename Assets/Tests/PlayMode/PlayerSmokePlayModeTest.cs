@@ -9,16 +9,10 @@ public class PlayerSmokePlayModeTest
 	[UnityTest]
 	public IEnumerator Saltar_SubeEnY_Y_ConsumeUnSalto()
 	{
-		// Suelo 
-		var ground = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		ground.transform.position = new Vector3(0, -1, 0);
-		ground.transform.localScale = new Vector3(20, 1, 20);
-		ground.tag = "Ground";
-
-		// Jugador simplificado: solo un Rigidbody 3D
+		// Jugador simplificado: solo un Rigidbody 3D sin gravedad
 		var playerGO = new GameObject("PlayerPhysicsOnly");
 		var rb = playerGO.AddComponent<Rigidbody>();
-		rb.useGravity = false; // Aislar el efecto para el test
+		rb.useGravity = false;
 		playerGO.transform.position = Vector3.zero;
 
 		// Esperar un frame para que inicialice
@@ -38,7 +32,6 @@ public class PlayerSmokePlayModeTest
 
 		// --- Cleanup ---
 		Object.DestroyImmediate(playerGO);
-		Object.DestroyImmediate(ground);
 		yield return null;
 	}
 
