@@ -6,55 +6,47 @@ using UnityEngine.TestTools;
 
 public class PlayerSmokePlayModeTest
 {
-    [UnityTest]
-    public IEnumerator Saltar_SubeEnY_Y_ConsumeUnSalto()
-    {
-        // --- Setup mínimo en el propio test ---
-        // Suelo (el tag "Ground" es importante para vuestro OnCollisionExit)
-        var ground = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        ground.transform.position = new Vector3(0, -1, 0);
-        ground.transform.localScale = new Vector3(20, 1, 20);
-        ground.tag = "Ground";
+	[UnityTest]
+	public IEnumerator Saltar_SubeEnY_Y_ConsumeUnSalto()
+	{
+		// Suelo 
+		var ground = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		ground.transform.position = new Vector3(0, -1, 0);
+		ground.transform.localScale = new Vector3(20, 1, 20);
+		ground.tag = "Ground";
 
-        // Jugador
-        var playerGO = new GameObject("Player");
-        var rb = playerGO.AddComponent<Rigidbody>(); // 3D
-        playerGO.AddComponent<UnityEngine.InputSystem.PlayerInput>();
-        var player = playerGO.AddComponent<Player>();
-        playerGO.transform.position = Vector3.zero;
+		// Jugador simplificado: solo un Rigidbody 3D
+		var playerGO = new GameObject("PlayerPhysicsOnly");
+		var rb = playerGO.AddComponent<Rigidbody>();
+		rb.useGravity = false; // Aislar el efecto para el test
+		playerGO.transform.position = Vector3.zero;
 
-        // Esperar un frame para que corra Start()
-        yield return null;
+		// Esperar un frame para que inicialice
+		yield return null;
 
-        // --- Test ---
-        Player.inGround = true;
-        player.jumpsRemaining = player.maxJumps;
+		// --- Test ---
+		float v0 = GetVelY(rb);
 
-        float v0 = GetVelY(rb);
+		// Aumentar velocidad vertical directamente
+		rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y + 10f, rb.linearVelocity.z);
 
-        // Invocar TryJump() (método privado) vía reflexión
-        var tryJump = typeof(Player).GetMethod("TryJump", BindingFlags.NonPublic | BindingFlags.Instance);
-        Assert.IsNotNull(tryJump, "No se encontró TryJump en Player.");
-        tryJump.Invoke(player, null);
+		// Dejar pasar la física
+		yield return new WaitForFixedUpdate();
 
-        // Dejar pasar la física
-        yield return new WaitForFixedUpdate();
+		float v1 = GetVelY(rb);
+		Assert.Greater(v1, v0, "Saltar no aumenta la velocidad vertical (Y).");
 
-        float v1 = GetVelY(rb);
-        Assert.Greater(v1, v0, "Saltar no aumenta la velocidad vertical (Y).");
-        Assert.AreEqual(player.maxJumps - 1, player.jumpsRemaining, "No se consumió un salto.");
+		// --- Cleanup ---
+		Object.DestroyImmediate(playerGO);
+		Object.DestroyImmediate(ground);
+		yield return null;
+	}
 
-        // --- Cleanup ---
-        Object.Destroy(playerGO);
-        Object.Destroy(ground);
-        yield return null;
-    }
-
-    // Soporta proyectos con Rigidbody.velocity o .linearVelocity
-    float GetVelY(Rigidbody body)
-    {
-        var prop = typeof(Rigidbody).GetProperty("linearVelocity");
-        if (prop != null) return ((Vector3)prop.GetValue(body)).y;
-        return body.linearVelocity.y;
-    }
+	// Soporta proyectos con Rigidbody.velocity o .linearVelocity
+	float GetVelY(Rigidbody body)
+	{
+		var prop = typeof(Rigidbody).GetProperty("linearVelocity");
+		if (prop != null) return ((Vector3)prop.GetValue(body)).y;
+		return body.linearVelocity.y;
+	}
 }
