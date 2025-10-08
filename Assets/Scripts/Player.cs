@@ -10,8 +10,8 @@ public class Player : MonoBehaviour
     [Range(5, 20)]
     public float moveSpeed = 10;
     [Range(10, 100)]
-    public float jumpForce = 30;
-    public int maxJumps = 2;
+    public float jumpForce = 65;
+    public int maxJumps = 1;
     public int jumpsRemaining;
     private Rigidbody _rigidBody;
     private PlayerInput playerInput;
@@ -19,6 +19,11 @@ public class Player : MonoBehaviour
     public static bool inGround;
     private float moveInput;
     public float stopDelay = 0.2f;
+    private float mayJump = 0f;       // Tiempo que aún puedes saltar después de salir del suelo
+    public float coyoteTime = 0.5f;  // Duración de coyote time
+    private float jumpBufferTimer = 0f;       // Temporizador del buffer de salto
+    public float jumpBufferTime = 0.01f;      // Cuánto tiempo recordamos el input
+    
     void Start()
     {
         _rigidBody = gameObject.GetComponent<Rigidbody>();
@@ -28,13 +33,32 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        transform.rotation = Quaternion.identity; 
         direction = playerInput.actions["Movement"].ReadValue<float>();
-
-        if (playerInput.actions["jump"].triggered)
+        
+        if (inGround)
+        {
+            mayJump = coyoteTime;  // Resetear el coyote time cuando estés en el suelo
+        }
+        else
+        {
+            mayJump -= Time.deltaTime;  // Contar hacia atrás cuando no estás en el suelo
+            mayJump = Mathf.Max(mayJump, 0f); // evitar negativos
+        }
+            if (playerInput.actions["jump"].triggered)
+            {
+                jumpBufferTimer = jumpBufferTime;
+                   
+                
+        }
+        jumpBufferTimer -= Time.deltaTime;
+             
+                jumpBufferTimer = Mathf.Max(jumpBufferTimer, 0f);
+        if (jumpBufferTimer > 0f && (mayJump > 0f || maxJumps == 2))
         {
             TryJump();
+            jumpBufferTimer = 0f; // consumimos el buffer
         }
-
     }
 
     private void FixedUpdate()
@@ -86,19 +110,24 @@ public class Player : MonoBehaviour
     }
     private void TryJump()
     {
-
-        if (jumpsRemaining <= 0)
+         
+    if (jumpsRemaining <= 0)
             return;
-
-        DoJump();
-        jumpsRemaining--;
-        inGround = false;
+    if((maxJumps == 1 && mayJump > 0f ) || maxJumps==2){
+        
+            DoJump();
+            jumpsRemaining--;
+            mayJump = 0f;
+            inGround = false;
+           
+        }
+       
     }
 
     private void DoJump()
     {
-        _rigidBody.linearVelocity = new Vector2(_rigidBody.linearVelocity.x, 0);
-        _rigidBody.AddForce(100 * jumpForce * transform.up);
+      _rigidBody.linearVelocity = new Vector2(_rigidBody.linearVelocity.x, 0); // reinicia la velocidad vertical
+    _rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
     public void Crouch()
