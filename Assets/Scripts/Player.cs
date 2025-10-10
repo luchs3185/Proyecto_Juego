@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
@@ -10,7 +11,7 @@ public class Player : MonoBehaviour
     [Range(5, 20)]
     public float moveSpeed = 10;
     [Range(10, 100)]
-    public float jumpForce = 65;
+    public float jumpForce = 70;
     public int maxJumps = 1;
     public int jumpsRemaining;
     private Rigidbody _rigidBody;
@@ -22,8 +23,13 @@ public class Player : MonoBehaviour
     private float mayJump = 0f;       // Tiempo que aún puedes saltar después de salir del suelo
     public float coyoteTime = 0.5f;  // Duración de coyote time
     private float jumpBufferTimer = 0f;       // Temporizador del buffer de salto
-    public float jumpBufferTime = 0.01f;      // Cuánto tiempo recordamos el input
-    
+    public float jumpBufferTime = 0.15f;      // Cuánto tiempo recordamos el input
+    private bool isDashing = false;
+    public float dashDirection;
+    public float dashSpeed = 25f;
+    public float dashTime = 0.2f;
+    public float dashCooldown = 0.5f; // segundos entre dashes
+private bool canDash = true;    // si puedes dashar
     void Start()
     {
         _rigidBody = gameObject.GetComponent<Rigidbody>();
@@ -45,19 +51,20 @@ public class Player : MonoBehaviour
             mayJump -= Time.deltaTime;  // Contar hacia atrás cuando no estás en el suelo
             mayJump = Mathf.Max(mayJump, 0f); // evitar negativos
         }
-            if (playerInput.actions["jump"].triggered)
-            {
-                jumpBufferTimer = jumpBufferTime;
-                   
-                
+        if (playerInput.actions["jump"].triggered)
+        {
+            jumpBufferTimer = jumpBufferTime;        
         }
         jumpBufferTimer -= Time.deltaTime;
-             
-                jumpBufferTimer = Mathf.Max(jumpBufferTimer, 0f);
+        jumpBufferTimer = Mathf.Max(jumpBufferTimer, 0f);
         if (jumpBufferTimer > 0f && (mayJump > 0f || maxJumps == 2))
         {
             TryJump();
             jumpBufferTimer = 0f; // consumimos el buffer
+        }
+        if (playerInput.actions["Dash"].triggered)
+        {
+            StartCoroutine(Dash());  
         }
     }
 
@@ -73,7 +80,7 @@ public class Player : MonoBehaviour
         {
                 targetX = Mathf.Lerp(_rigidBody.linearVelocity.x, 0f, Time.fixedDeltaTime / stopDelay);
         }
-        if (targetX != 0)
+        if (targetX != 0 && !isDashing)
             _rigidBody.linearVelocity = new Vector2(targetX, _rigidBody.linearVelocity.y);
     }
 
@@ -130,8 +137,37 @@ public class Player : MonoBehaviour
     _rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
-    public void Crouch()
+    private IEnumerator Dash()
     {
+           if (!canDash)
+        yield break; // no hacer nada si está en cooldown
 
+    isDashing = true;
+    canDash = false; // bloqueamos el dash
+    _rigidBody.useGravity = false;
+
+    // Guardamos la velocidad vertical actual (por si quieres restaurarla después)
+    float originalY = _rigidBody.linearVelocity.y;
+
+    // Determina dirección del dash
+    float dashDirection = moveInput != 0 ? Mathf.Sign(moveInput) : (transform.localScale.x > 0 ? 1f : -1f);
+
+    float elapsed = 0f;
+    while(elapsed < dashTime)
+    {
+        // Dash horizontal completamente plano
+        _rigidBody.linearVelocity = new Vector3(dashDirection * dashSpeed, 0f, 0f);
+
+        elapsed += Time.fixedDeltaTime;
+        yield return new WaitForFixedUpdate();
+    }
+
+    // Restauramos gravedad
+    _rigidBody.useGravity = true;
+    isDashing = false;
+
+    // Espera cooldown antes de permitir nuevo dash
+    yield return new WaitForSeconds(dashCooldown);
+    canDash = true;
     }
 }

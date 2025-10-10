@@ -25,7 +25,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Crouch",
+                    "name": "Dash",
                     "type": "Button",
                     "id": "075dc22f-3587-48ba-9dc1-a4fa1c592d02",
                     "expectedControlType": "",
@@ -126,11 +126,11 @@
                 {
                     "name": "",
                     "id": "2309db6c-b2b8-42fe-8552-95c2068b15d7",
-                    "path": "<Keyboard>/s",
+                    "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Crouch",
+                    "action": "Dash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

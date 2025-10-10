@@ -4676,13 +4676,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1711144534}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.037566554, y: -0.017404549, z: 0.00053941866, w: 0.9991424}
-  m_LocalPosition: {x: 8.717515, y: -0.9133322, z: 0.38000047}
+  m_LocalRotation: {x: 0.004989676, y: -0.017412882, z: -0.000027992639, w: 0.99983597}
+  m_LocalPosition: {x: 8.717569, y: -0.9133309, z: 0}
   m_LocalScale: {x: 0.87932736, y: 1.0007591, z: 0.99385655}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 978163399}
-  m_LocalEulerAnglesHint: {x: 4.299, y: -1.984, z: -0.167}
+  m_LocalEulerAnglesHint: {x: 0.572, y: -1.996, z: -0.013}
 --- !u!1 &1760068390
 GameObject:
   m_ObjectHideFlags: 0
@@ -5965,8 +5965,16 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7936594041477022980, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: dashTime
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7936594041477022980, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
       propertyPath: maxJumps
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7936594041477022980, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: dashSpeed
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 7936594041477022980, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
       propertyPath: jumpForce
@@ -5987,6 +5995,10 @@ PrefabInstance:
     - target: {fileID: 7936594041477022980, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
       propertyPath: groundCheck
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7936594041477022980, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: dashCooldown
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7936594041477022980, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
       propertyPath: groundDistance
