@@ -41,6 +41,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "reset",
+                    "type": "Button",
+                    "id": "b4d1c784-65ba-41d0-8af1-b732b90ca77c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -151,6 +160,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "DIg",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f2789b43-c3ad-4dee-b9e9-a8fa9fe44b5e",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "reset",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
