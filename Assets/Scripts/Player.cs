@@ -29,7 +29,8 @@ public class Player : MonoBehaviour
     public float dashSpeed = 25f;
     public float dashTime = 0.2f;
     public float dashCooldown = 0.5f; // segundos entre dashes
-private bool canDash = true;    // si puedes dashar
+    private bool canDash = true;    // si puedes dashar
+    private float facingDirection = 1f; // 1 = derecha, -1 = izquierda
     void Start()
     {
         _rigidBody = gameObject.GetComponent<Rigidbody>();
@@ -64,7 +65,12 @@ private bool canDash = true;    // si puedes dashar
         }
         if (playerInput.actions["Dash"].triggered)
         {
-            StartCoroutine(Dash());  
+            StartCoroutine(Dash());
+        }
+        
+        if (playerInput.actions["Dig"].triggered)
+        {
+            
         }
     }
 
@@ -74,6 +80,7 @@ private bool canDash = true;    // si puedes dashar
 
         if (Mathf.Abs(moveInput) > 0.01f)
         {
+            facingDirection = Mathf.Sign(moveInput);
             targetX = moveInput * moveSpeed;
         }
         else
@@ -104,6 +111,7 @@ private bool canDash = true;    // si puedes dashar
         if (collision.collider.CompareTag("Ground"))
             inGround = false;
     }
+    
     public void Move(CallbackContext context)
     {
         if (context.canceled)
@@ -115,12 +123,14 @@ private bool canDash = true;    // si puedes dashar
             moveInput = context.ReadValue<float>();
         }
     }
+
+    //SALTO
     private void TryJump()
     {
          
     if (jumpsRemaining <= 0)
             return;
-    if((maxJumps == 1 && mayJump > 0f ) || maxJumps==2){
+    if((maxJumps == 1 && mayJump > 0f && inGround ) || maxJumps==2){
         
             DoJump();
             jumpsRemaining--;
@@ -137,37 +147,39 @@ private bool canDash = true;    // si puedes dashar
     _rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
+
+    ///DASH
     private IEnumerator Dash()
     {
-           if (!canDash)
-        yield break; // no hacer nada si está en cooldown
+        if (!canDash)
+            yield break; // no hacer nada si está en cooldown
 
-    isDashing = true;
-    canDash = false; // bloqueamos el dash
-    _rigidBody.useGravity = false;
+        isDashing = true;
+        canDash = false; // bloqueamos el dash
+        _rigidBody.useGravity = false;
 
-    // Guardamos la velocidad vertical actual (por si quieres restaurarla después)
-    float originalY = _rigidBody.linearVelocity.y;
+        // Guardamos la velocidad vertical actual (por si quieres restaurarla después)
+        float originalY = _rigidBody.linearVelocity.y;
 
-    // Determina dirección del dash
-    float dashDirection = moveInput != 0 ? Mathf.Sign(moveInput) : (transform.localScale.x > 0 ? 1f : -1f);
+        float elapsed = 0f;
+        while (elapsed < dashTime)
+        {
+            // Dash horizontal completamente plano
+            _rigidBody.linearVelocity = new Vector3(facingDirection * dashSpeed, 0f, 0f);
 
-    float elapsed = 0f;
-    while(elapsed < dashTime)
-    {
-        // Dash horizontal completamente plano
-        _rigidBody.linearVelocity = new Vector3(dashDirection * dashSpeed, 0f, 0f);
+            elapsed += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
 
-        elapsed += Time.fixedDeltaTime;
-        yield return new WaitForFixedUpdate();
+        // Restauramos gravedad
+        _rigidBody.useGravity = true;
+        isDashing = false;
+
+        // Espera cooldown antes de permitir nuevo dash
+        yield return new WaitForSeconds(dashCooldown);
+        canDash = true;
     }
-
-    // Restauramos gravedad
-    _rigidBody.useGravity = true;
-    isDashing = false;
-
-    // Espera cooldown antes de permitir nuevo dash
-    yield return new WaitForSeconds(dashCooldown);
-    canDash = true;
-    }
+    
+    //EXCAVAR
+    
 }
