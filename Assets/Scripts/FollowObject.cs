@@ -10,7 +10,7 @@ public class FollowObject : MonoBehaviour
     {
     }
 
-    void Update()
+    void LateUpdate()
     {
         gameObject.transform.position = new Vector3(target.position.x +horizontalOffset , target.position.y + verticalOffset, gameObject.transform.position.z);
     }

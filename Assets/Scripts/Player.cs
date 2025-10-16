@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -42,7 +43,10 @@ public class Player : MonoBehaviour
     {
         transform.rotation = Quaternion.identity; 
         direction = playerInput.actions["Movement"].ReadValue<float>();
-        
+        if (playerInput.actions["reset"].triggered)
+        {
+             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);      
+        }
         if (inGround)
         {
             mayJump = coyoteTime;  // Resetear el coyote time cuando estés en el suelo
