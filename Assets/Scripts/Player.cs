@@ -32,20 +32,25 @@ public class Player : MonoBehaviour
     public float dashCooldown = 0.5f; // segundos entre dashes
     private bool canDash = true;    // si puedes dashar
     private float facingDirection = 1f; // 1 = derecha, -1 = izquierda
+
+    private bool touchedWater = false; //si toca el agua
+
     void Start()
     {
         _rigidBody = gameObject.GetComponent<Rigidbody>();
         playerInput = gameObject.GetComponent<PlayerInput>();
         jumpsRemaining = maxJumps;
+
     }
 
     void Update()
     {
-        transform.rotation = Quaternion.identity; 
+        transform.rotation = Quaternion.identity;
         direction = playerInput.actions["Movement"].ReadValue<float>();
-        if (playerInput.actions["reset"].triggered)
+
+        if (playerInput.actions["reset"].triggered || touchedWater) //se vuelve al inicio
         {
-             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);      
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         if (inGround)
         {
@@ -58,7 +63,7 @@ public class Player : MonoBehaviour
         }
         if (playerInput.actions["jump"].triggered)
         {
-            jumpBufferTimer = jumpBufferTime;        
+            jumpBufferTimer = jumpBufferTime;
         }
         jumpBufferTimer -= Time.deltaTime;
         jumpBufferTimer = Mathf.Max(jumpBufferTimer, 0f);
@@ -71,10 +76,18 @@ public class Player : MonoBehaviour
         {
             StartCoroutine(Dash());
         }
-        
+
         if (playerInput.actions["Dig"].triggered)
         {
-            
+
+        }
+    }
+    //metodo para saber si toca el agua
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Water"))
+        {
+            touchedWater = true;
         }
     }
 
@@ -183,7 +196,8 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
     }
-    
+
     //EXCAVAR
+
     
 }
