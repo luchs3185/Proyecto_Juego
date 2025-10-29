@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
     [Range(5, 20)]
     public float moveSpeed = 10;
     [Range(10, 100)]
+    
+    [Header("Salto")]
     public float jumpForce = 70;
     public int maxJumps = 1;
     public int jumpsRemaining;
@@ -22,9 +24,11 @@ public class Player : MonoBehaviour
     private float moveInput;
     public float stopDelay = 0.2f;
     private float mayJump = 0f;       // Tiempo que aún puedes saltar después de salir del suelo
-    public float coyoteTime = 0.5f;  // Duración de coyote time
+    public float coyoteTime = 0.1f;  // Duración de coyote time
     private float jumpBufferTimer = 0f;       // Temporizador del buffer de salto
     public float jumpBufferTime = 0.15f;      // Cuánto tiempo recordamos el input
+
+    [Header("Dash")]
     private bool isDashing = false;
     public float dashDirection;
     public float dashSpeed = 25f;
@@ -67,11 +71,15 @@ public class Player : MonoBehaviour
         }
         jumpBufferTimer -= Time.deltaTime;
         jumpBufferTimer = Mathf.Max(jumpBufferTimer, 0f);
-        if (jumpBufferTimer > 0f && (mayJump > 0f || maxJumps == 2))
+        if (jumpBufferTimer > 0f)
         {
-            TryJump();
-            jumpBufferTimer = 0f; // consumimos el buffer
+            if (mayJump > 0f || jumpsRemaining > 0)
+            {
+                TryJump();
+                jumpBufferTimer = 0f; 
+            }
         }
+
         if (playerInput.actions["Dash"].triggered)
         {
             StartCoroutine(Dash());
@@ -147,7 +155,7 @@ public class Player : MonoBehaviour
          
     if (jumpsRemaining <= 0)
             return;
-    if((maxJumps == 1 && mayJump > 0f && inGround ) || maxJumps==2){
+    if(inGround || mayJump > 0f || maxJumps == 2){
         
             DoJump();
             jumpsRemaining--;

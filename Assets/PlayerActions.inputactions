@@ -154,6 +154,17 @@
                 },
                 {
                     "name": "",
+                    "id": "81cc8647-a353-4fc4-9b19-81bfdad7806e",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "f55165ce-222d-4f9c-bb6d-1e7c8b068a22",
                     "path": "<Keyboard>/q",
                     "interactions": "",
