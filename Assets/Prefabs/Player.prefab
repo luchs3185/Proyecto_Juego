@@ -108,11 +108,13 @@ MonoBehaviour:
   stopDelay: 0.2
   coyoteTime: 0.5
   jumpBufferTime: 0.15
+  jumpCutMultiplier: 0.5
   dashDirection: 0
   dashSpeed: 25
   dashTime: 0.2
   dashCooldown: 0.5
   _animator: {fileID: 4274584293906182559}
+  dashCloudPrefab: {fileID: 0}
 --- !u!114 &1221534043395814947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,6 +314,7 @@ GameObject:
   - component: {fileID: 8839466724072330236}
   - component: {fileID: 7489643366161440851}
   - component: {fileID: 3791662070498749836}
+  - component: {fileID: 393732017987016048}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -408,3 +411,15 @@ MonoBehaviour:
   target: {fileID: 8540794081819198946}
   verticalOffset: 2
   horizontalOffset: 0
+--- !u!114 &393732017987016048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8403610883871320470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13c817676073ccb4a920e9c2fa91633d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Proyecto_Juego.Runtime::CameraShake

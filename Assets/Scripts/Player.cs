@@ -29,6 +29,10 @@ public class Player : MonoBehaviour
     private float jumpBufferTimer = 0f;       // Temporizador del buffer de salto
     public float jumpBufferTime = 0.15f;      // Cuánto tiempo recordamos el input
 
+    [Header("Salto variable")]
+    [Range(0f, 1f)]
+    public float jumpCutMultiplier = 0.5f;
+
     [Header("Dash")]
     private bool isDashing = false;
     public float dashDirection;
@@ -87,7 +91,13 @@ public class Player : MonoBehaviour
                 jumpBufferTimer = 0f;
             }
         }
-
+        if (playerInput.actions["jump"].WasReleasedThisFrame() && _rigidBody.linearVelocity.y > 0f)
+        {
+            _rigidBody.linearVelocity = new Vector2(
+                _rigidBody.linearVelocity.x,
+                _rigidBody.linearVelocity.y * jumpCutMultiplier
+            );
+        }
         if (playerInput.actions["Dash"].triggered)
         {
             StartCoroutine(Dash());
@@ -211,13 +221,8 @@ public class Player : MonoBehaviour
 
         // Guardamos la velocidad vertical actual (por si quieres restaurarla después)
         float originalY = _rigidBody.linearVelocity.y;
-
         float elapsed = 0f;
         _animator.SetBool("isDashing", true);
-        //Vector3 spawnPos = transform.position - new Vector3(facingDirection * 0.5f, 0f, 0f);
-        
-        //GameObject c=Instantiate(dashCloudPrefab, spawnPos, Quaternion.identity);
-        //Destroy(c, 0.1f);
         while (elapsed < dashTime)
         {
             // Dash horizontal completamente plano
@@ -237,6 +242,8 @@ public class Player : MonoBehaviour
         canDash = true;
     }
 
+    
+    
     //EXCAVAR
 
 
