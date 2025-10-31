@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
 using UnityEngine.SceneManagement;
+using UnityEditor;
 
 public class Player : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class Player : MonoBehaviour
     [Range(5, 20)]
     public float moveSpeed = 10;
     [Range(10, 100)]
-    
+
     [Header("Salto")]
     public float jumpForce = 70;
     public int maxJumps = 1;
@@ -36,6 +37,12 @@ public class Player : MonoBehaviour
     public float dashCooldown = 0.5f; // segundos entre dashes
     private bool canDash = true;    // si puedes dashar
     private float facingDirection = 1f; // 1 = derecha, -1 = izquierda
+    private SpriteRenderer _spriteRenderer;
+
+    [Header("Animaciones")]
+    public Animator _animator;
+    public GameObject dashCloudPrefab;
+
 
     private bool touchedWater = false; //si toca el agua
 
@@ -43,6 +50,7 @@ public class Player : MonoBehaviour
     {
         _rigidBody = gameObject.GetComponent<Rigidbody>();
         playerInput = gameObject.GetComponent<PlayerInput>();
+        _spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         jumpsRemaining = maxJumps;
 
     }
@@ -76,7 +84,7 @@ public class Player : MonoBehaviour
             if (mayJump > 0f || jumpsRemaining > 0)
             {
                 TryJump();
-                jumpBufferTimer = 0f; 
+                jumpBufferTimer = 0f;
             }
         }
 
@@ -103,17 +111,28 @@ public class Player : MonoBehaviour
     {
         float targetX;
 
-        if (Mathf.Abs(moveInput) > 0.01f)
+        if (!isDashing)
         {
-            facingDirection = Mathf.Sign(moveInput);
-            targetX = moveInput * moveSpeed;
-        }
-        else
-        {
+            if (Mathf.Abs(moveInput) > 0.01f)
+            {
+                facingDirection = Mathf.Sign(moveInput);
+                targetX = moveInput * moveSpeed;
+            }
+            else
+            {
                 targetX = Mathf.Lerp(_rigidBody.linearVelocity.x, 0f, Time.fixedDeltaTime / stopDelay);
+                if (Math.Abs(targetX) < 0.03f) targetX = 0;
+            }
+            if (!isDashing)
+            {
+                _rigidBody.linearVelocity = new Vector2(targetX, _rigidBody.linearVelocity.y);
+                _animator.SetBool("isWalking", Math.Abs(targetX) > 0.03f);
+            }
+            else
+            {
+                _animator.SetBool("isWalking", false);
+            }
         }
-        if (targetX != 0 && !isDashing)
-            _rigidBody.linearVelocity = new Vector2(targetX, _rigidBody.linearVelocity.y);
     }
 
     void OnCollisionEnter(Collision collision)
@@ -125,6 +144,8 @@ public class Player : MonoBehaviour
             if (Vector3.Angle(normal, Vector3.up) < 30f)
             {
                 {
+
+                    _animator.SetBool("isJumping", false);
                     inGround = true;
                     jumpsRemaining = maxJumps;
                 }
@@ -136,7 +157,7 @@ public class Player : MonoBehaviour
         if (collision.collider.CompareTag("Ground"))
             inGround = false;
     }
-    
+
     public void Move(CallbackContext context)
     {
         if (context.canceled)
@@ -146,30 +167,35 @@ public class Player : MonoBehaviour
         else if (context.performed)
         {
             moveInput = context.ReadValue<float>();
+            if (moveInput > 0) _spriteRenderer.flipX = true;
+            else _spriteRenderer.flipX = false;
         }
     }
 
     //SALTO
     private void TryJump()
     {
-         
-    if (jumpsRemaining <= 0)
+
+        if (jumpsRemaining <= 0)
             return;
-    if(inGround || mayJump > 0f || maxJumps == 2){
-        
+        if (inGround || mayJump > 0f || maxJumps == 2)
+        {
+
             DoJump();
             jumpsRemaining--;
             mayJump = 0f;
             inGround = false;
-           
+
         }
-       
+
     }
 
     private void DoJump()
     {
-      _rigidBody.linearVelocity = new Vector2(_rigidBody.linearVelocity.x, 0); // reinicia la velocidad vertical
-    _rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        _animator.SetBool("isJumping", true);
+        _rigidBody.linearVelocity = new Vector2(_rigidBody.linearVelocity.x, 0); // reinicia la velocidad vertical
+        _rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
     }
 
 
@@ -187,6 +213,11 @@ public class Player : MonoBehaviour
         float originalY = _rigidBody.linearVelocity.y;
 
         float elapsed = 0f;
+        _animator.SetBool("isDashing", true);
+        //Vector3 spawnPos = transform.position - new Vector3(facingDirection * 0.5f, 0f, 0f);
+        
+        //GameObject c=Instantiate(dashCloudPrefab, spawnPos, Quaternion.identity);
+        //Destroy(c, 0.1f);
         while (elapsed < dashTime)
         {
             // Dash horizontal completamente plano
@@ -200,6 +231,7 @@ public class Player : MonoBehaviour
         _rigidBody.useGravity = true;
         isDashing = false;
 
+        _animator.SetBool("isDashing", false);
         // Espera cooldown antes de permitir nuevo dash
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
@@ -207,5 +239,5 @@ public class Player : MonoBehaviour
 
     //EXCAVAR
 
-    
+
 }
