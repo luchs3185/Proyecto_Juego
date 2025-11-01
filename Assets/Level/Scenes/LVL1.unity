@@ -10975,6 +10975,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7922226584606103451, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_Size.x
+      value: 2.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7922226584606103451, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_Size.y
+      value: 2.43
+      objectReference: {fileID: 0}
+    - target: {fileID: 7922226584606103451, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 4fb655ef62877563e93c99b68cac63c6, type: 3}
+    - target: {fileID: 7922226584606103451, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7936594041477022980, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
       propertyPath: dashCloudPrefab
       value: 
