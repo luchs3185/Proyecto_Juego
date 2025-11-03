@@ -3,7 +3,7 @@ using UnityEngine;
 public class FallingPlatform : MonoBehaviour
 {
     [Header("Tiempo antes de desaparecer")]
-    public float disappearDelay = 0.2f; // segundos antes de desaparecer
+    public float disappearDelay = 0.8f; // segundos antes de desaparecer
 
     private bool triggered = false;
 

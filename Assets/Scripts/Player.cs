@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     [Header("Salto")]
     public float jumpForce = 70;
     public int maxJumps = 1;
+    public int jumpnum = 0;
     public int jumpsRemaining;
     private Rigidbody _rigidBody;
     private PlayerInput playerInput;
@@ -91,7 +92,7 @@ public class Player : MonoBehaviour
                 jumpBufferTimer = 0f;
             }
         }
-        if (playerInput.actions["jump"].WasReleasedThisFrame() && _rigidBody.linearVelocity.y > 0f)
+        if (playerInput.actions["jump"].WasReleasedThisFrame() && _rigidBody.linearVelocity.y > 0f && jumpnum == 1)
         {
             _rigidBody.linearVelocity = new Vector2(
                 _rigidBody.linearVelocity.x,
@@ -154,10 +155,10 @@ public class Player : MonoBehaviour
             if (Vector3.Angle(normal, Vector3.up) < 30f)
             {
                 {
-
                     _animator.SetBool("isJumping", false);
                     inGround = true;
                     jumpsRemaining = maxJumps;
+                    jumpnum = 0;
                 }
             }
         }
@@ -193,6 +194,7 @@ public class Player : MonoBehaviour
 
             DoJump();
             jumpsRemaining--;
+            jumpnum++;
             mayJump = 0f;
             inGround = false;
 
