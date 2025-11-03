@@ -35,14 +35,14 @@ public class Player : MonoBehaviour
     public float jumpCutMultiplier = 0.5f;
 
     [Header("Dash")]
-    private bool isDashing = false;
-    public float dashDirection;
     public float dashSpeed = 25f;
     public float dashTime = 0.2f;
     public float dashCooldown = 0.5f; // segundos entre dashes
     private bool canDash = true;    // si puedes dashar
     private float facingDirection = 1f; // 1 = derecha, -1 = izquierda
     private SpriteRenderer _spriteRenderer;
+    public float dashDirection;
+     private bool isDashing = false;
 
     [Header("Animaciones")]
     public Animator _animator;
