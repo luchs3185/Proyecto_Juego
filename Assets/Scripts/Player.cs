@@ -53,7 +53,7 @@ public class Player : MonoBehaviour
     private readonly string digTag = "dig";
     private Collider[] myColliders;
     private Transform digZone;
-    private float digDirection;
+    private Vector2 digDirection;
 
 
     [Header("Animaciones")]
@@ -84,6 +84,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(_rigidBody.useGravity);
         transform.rotation = Quaternion.identity;
         direction = playerInput.actions["Movement"].ReadValue<float>();
 
@@ -128,12 +129,7 @@ public class Player : MonoBehaviour
 
         if (playerInput.actions["Dig"].triggered)
         {
-            digDirection = playerInput.actions["UpDown"].ReadValue<float>();
-
-            if (Mathf.Abs(digDirection) > 0.1f)
-            {
-                Dig();
-            }
+            Dig();
         }
     }
     //metodo para saber si toca el agua
@@ -285,17 +281,18 @@ public class Player : MonoBehaviour
     {
         if (!isDigging)
         {
-            if (digDirection > 0 && IsDiggableAboveBox())
+            if (IsDiggableAboveBox() || IsDiggableBelowBox() || IsDiggableLeft() || IsDiggableRight())
                 StartDig();
-            else if (digDirection < 0 && IsDiggableBelowBox())
-            {
-                StartDig();
-            }
             else
                 return;
 
-            if (digZone != null && Mathf.Abs(digDirection) > 0.1f)
-                StartCoroutine(AutoMoveVerticalDig());
+            if (digZone != null)
+            {
+                if (digDirection.x == 1 || digDirection.x == -1)
+                    StartCoroutine(AutoMoveHorizontalDig());
+                else
+                    StartCoroutine(AutoMoveVerticalDig());
+            }
         }
     }
 
@@ -306,20 +303,24 @@ public class Player : MonoBehaviour
         _rigidBody.useGravity = false;
 
         IgnoreTagCollisions(true);
-        transform.position += new Vector3(0, undergroundOffset, 0);
+
+        transform.position += new Vector3(digDirection.x * undergroundOffset, digDirection.y * undergroundOffset, 0);
 
         _animator.SetBool("isDigging", true);
+        
+        playerInput.actions["Movement"].Disable();
     }
 
     private void StopDig()
     {
         isDigging = false;
         gameObject.layer = LayerMask.NameToLayer(normalLayer);
-        _rigidBody.useGravity = true;
-        IgnoreTagCollisions(false);
         foreach (var c in myColliders)
             c.enabled = true;
+        IgnoreTagCollisions(false);
+        _rigidBody.useGravity = true;
         _animator.SetBool("isDigging", false);
+        playerInput.actions["Movement"].Enable();
 
     }
 
@@ -352,6 +353,7 @@ public class Player : MonoBehaviour
         {
             if (hit.collider.CompareTag(digTag))
             {
+                digDirection = new(0, 1);
                 digZone = hit.transform;
                 return true;
             }
@@ -369,6 +371,44 @@ public class Player : MonoBehaviour
         {
             if (hit.collider.CompareTag(digTag))
             {
+
+                digDirection = new(0, -1);
+                digZone = hit.transform;
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    bool IsDiggableRight()
+    {
+        float castDistance = 1f;
+        Vector3 halfExtents = new Vector3(0.1f, 0.5f, 0.5f);
+        Vector3 origin = transform.position + Vector3.right * 0.1f;
+
+        if (Physics.BoxCast(origin, halfExtents, Vector3.right, out RaycastHit hit, Quaternion.identity, castDistance))
+        {
+            if (hit.collider.CompareTag(digTag))
+            {
+                digDirection = new(1, 0);
+                digZone = hit.transform;
+                return true;
+            }
+        }
+        return false;
+    }
+    bool IsDiggableLeft()
+    {
+        float castDistance = 1f;
+        Vector3 halfExtents = new Vector3(0.1f, 0.5f, 0.5f);
+        Vector3 origin = transform.position + Vector3.left * 0.1f;
+
+        if (Physics.BoxCast(origin, halfExtents, Vector3.left, out RaycastHit hit, Quaternion.identity, castDistance))
+        {
+            if (hit.collider.CompareTag(digTag))
+            {
+                digDirection = new(-1, 0);
                 digZone = hit.transform;
                 return true;
             }
@@ -386,7 +426,6 @@ public class Player : MonoBehaviour
 
         _rigidBody.useGravity = false;
 
-        Debug.Log(targetY);
         while (isDigging && Mathf.Abs(transform.position.y - targetY) > 0.01f)
         {
 
@@ -404,4 +443,37 @@ public class Player : MonoBehaviour
         StopDig();
     }
 
+
+
+    private IEnumerator AutoMoveHorizontalDig()
+    {
+        if (digZone == null) yield break;
+
+        Collider digCollider = digZone.GetComponent<Collider>();
+        float targetX = transform.position.x < digCollider.bounds.center.x
+            ? digCollider.bounds.max.x
+            : digCollider.bounds.min.x;
+
+        _rigidBody.useGravity = false;
+
+        float dir = targetX > transform.position.x ? 1f : -1f;
+
+        while (isDigging && Mathf.Abs(_rigidBody.position.x - targetX) > 0.001f)
+        {
+            Vector3 nextPos = transform.position + autoDigSpeed * dir * Time.fixedDeltaTime * Vector3.right;
+
+            if (dir > 0 && nextPos.x > targetX)
+                nextPos.x = targetX;
+
+            if    (dir < 0 && nextPos.x < targetX){
+                nextPos.x = targetX;
+                Debug.Log(nextPos.x + ", "+ targetX);
+            }
+            _rigidBody.MovePosition(nextPos);
+
+            yield return new WaitForFixedUpdate();
+        }
+
+        StopDig();
+    }
 }

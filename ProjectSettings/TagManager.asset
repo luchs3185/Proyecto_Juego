@@ -8,11 +8,12 @@ TagManager:
   - UI
   - Water
   - item
+  - dig
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - underground
   - Water
   - UI
   - ground

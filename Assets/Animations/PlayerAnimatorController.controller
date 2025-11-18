@@ -167,6 +167,12 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
+  - m_Name: isDigging
+    m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -212,7 +218,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: New Animation
+  m_Name: Dig
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -466,7 +472,7 @@ AnimatorStateMachine:
     m_Position: {x: 470, y: 330, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 888466410890646737}
-    m_Position: {x: 505, y: 395, z: 0}
+    m_Position: {x: 840, y: 340, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
