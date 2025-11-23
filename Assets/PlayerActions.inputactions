@@ -34,7 +34,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "DIg",
+                    "name": "Dig",
                     "type": "Button",
                     "id": "82805df1-9279-44f6-81cd-b3e1b6148cfc",
                     "expectedControlType": "",
@@ -46,6 +46,15 @@
                     "name": "reset",
                     "type": "Button",
                     "id": "b4d1c784-65ba-41d0-8af1-b732b90ca77c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "UpDown",
+                    "type": "Button",
+                    "id": "11365af9-d5ed-45d5-b8ac-31db67bf00f5",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -170,7 +179,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "DIg",
+                    "action": "Dig",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -184,6 +193,72 @@
                     "action": "reset",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "d3976159-2b29-4158-91f7-8bb7712f62d6",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UpDown",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "34156adc-7caf-434f-9723-15ad4fba4bea",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UpDown",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "369c6780-dbcf-4a60-833e-fce14f84fe95",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UpDown",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "998cce89-9afe-42ca-a96a-c7efbe114c39",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UpDown",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "6d8fe6a2-5256-47dd-8e80-c8bb5b77c98e",
+                    "path": "<Gamepad>/leftStick/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UpDown",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "991a0c5a-9724-40c2-b368-64b0c52cda00",
+                    "path": "<Gamepad>/leftStick/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UpDown",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }
