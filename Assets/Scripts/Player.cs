@@ -7,9 +7,9 @@ using UnityEngine.SceneManagement;
 using UnityEditor;
 using System.Runtime.CompilerServices;
 
+
 public class Player : MonoBehaviour
 {
-
     [Header("Movimiento del personaje")]
     [Range(5, 20)]
     public float moveSpeed = 10;
@@ -28,9 +28,9 @@ public class Player : MonoBehaviour
     private float moveInput;
     public float stopDelay = 0.2f;
     private float mayJump = 0f;       // Tiempo que aún puedes saltar después de salir del suelo
-    public float coyoteTime = 0.1f;  // Duración de coyote time
+    public float coyoteTime = 0.5f;  // Duración de coyote time
     private float jumpBufferTimer = 0f;       // Temporizador del buffer de salto
-    public float jumpBufferTime = 0.15f;      // Cuánto tiempo recordamos el input
+    public float jumpBufferTime = 0.2f;      // Cuánto tiempo recordamos el input
 
     [Header("Salto variable")]
     [Range(0f, 1f)]
@@ -55,7 +55,6 @@ public class Player : MonoBehaviour
     private Transform digZone;
     private Vector2 digDirection;
 
-
     [Header("Animaciones")]
     public Animator _animator;
     public GameObject dashCloudPrefab;
@@ -63,9 +62,10 @@ public class Player : MonoBehaviour
     private readonly string undergroundLayer = "underground";
     private readonly string normalLayer = "Default";
 
+    [Header("Vida")]
+    public double life = 5;
+    private bool touchWater = false; //si toca el agua
 
-
-    private bool touchedWater = false; //si toca el agua
 
     //TAGS
     private string groundTag = "Ground";
@@ -84,11 +84,11 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(_rigidBody.useGravity);
+        //Debug.Log(_rigidBody.useGravity);
         transform.rotation = Quaternion.identity;
         direction = playerInput.actions["Movement"].ReadValue<float>();
 
-        if (playerInput.actions["reset"].triggered || touchedWater) //se vuelve al inicio
+        if (playerInput.actions["reset"].triggered) //se vuelve al inicio
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
@@ -117,7 +117,7 @@ public class Player : MonoBehaviour
         }
         if (playerInput.actions["jump"].WasReleasedThisFrame() && _rigidBody.linearVelocity.y > 0f && jumpnum == 1)
         {
-            _rigidBody.linearVelocity = new Vector2(
+             _rigidBody.linearVelocity = new Vector2(
                 _rigidBody.linearVelocity.x,
                 _rigidBody.linearVelocity.y * jumpCutMultiplier
             );
@@ -135,17 +135,18 @@ public class Player : MonoBehaviour
     //metodo para saber si toca el agua
     private void OnTriggerEnter(Collider other)
     {
-
         if (other.CompareTag(waterTag))
         {
-            touchedWater = true;
+            Debug.Log("Toca");
+            touchWater = true;
+            TakeDamageWater();
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag(waterTag))
-            touchedWater = false;
+            touchWater = false;
     }
 
     private void FixedUpdate()
@@ -178,24 +179,35 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        if (IsGroundContact(collision))
+        {
+            _animator.SetBool("isJumping", false);
+            inGround = true;
+            jumpsRemaining = maxJumps;
+            jumpnum = 0;
+        }
+    }
+    bool IsGroundContact(Collision collision)
+    {
         foreach (ContactPoint contact in collision.contacts)
         {
-            Vector3 normal = contact.normal;
-
-            if (Vector3.Angle(normal, Vector3.up) < 30f)
+            if (Vector3.Angle(contact.normal, Vector3.up) < 30f)
             {
-                {
-                    _animator.SetBool("isJumping", false);
-                    inGround = true;
-                    jumpsRemaining = maxJumps;
-                    jumpnum = 0;
-                }
+                return true;
             }
+        }
+        return false;
+    }
+    void OnCollisionStay(Collision collision)
+    {
+    // Mientras exista al menos un contacto válido con suelo = seguimos en el suelo
+        if (IsGroundContact(collision))
+        {
+        inGround = true;
         }
     }
     void OnCollisionExit(Collision collision)
     {
-        if (collision.collider.CompareTag(groundTag))
             inGround = false;
     }
 
@@ -216,28 +228,50 @@ public class Player : MonoBehaviour
     //SALTO
     private void TryJump()
     {
-
-        if (jumpsRemaining <= 0)
+        if (jumpsRemaining <= 0){
             return;
-        if (inGround || mayJump > 0f || maxJumps == 2)
-        {
-
-            DoJump();
-            jumpsRemaining--;
-            jumpnum++;
-            mayJump = 0f;
-            inGround = false;
-
         }
 
+        if (maxJumps == 1)
+        {
+            if(!inGround){
+                return;
+            }  
+            DoJump();
+            jumpsRemaining = 0;
+            jumpnum = 1;
+            return;
+        }
+
+        if (maxJumps == 2)
+        {
+            // Primer salto (suelo o coyote time)
+            if (inGround || mayJump > 0f)
+            {
+                DoJump();
+                jumpsRemaining = 1;   
+                jumpnum = 1;
+                mayJump = 0f;
+                inGround = false;
+                return;
+            }
+
+            // Segundo salto EN AIRE
+            if (jumpsRemaining == 1 && !inGround)
+            {
+                DoJump();
+                jumpsRemaining = 0;
+                jumpnum = 2;
+                return;
+            }
+        }
     }
 
     private void DoJump()
     {
         _animator.SetBool("isJumping", true);
-        _rigidBody.linearVelocity = new Vector2(_rigidBody.linearVelocity.x, 0); // reinicia la velocidad vertical
+       _rigidBody.linearVelocity = new Vector2(_rigidBody.linearVelocity.x, 0); // reinicia la velocidad vertical
         _rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-
     }
 
 
@@ -475,5 +509,62 @@ public class Player : MonoBehaviour
         }
 
         StopDig();
+    }
+
+
+
+    private void TakeDamageWater()
+    {   
+        life = life - 0.5;
+        if (life > 0)
+        {
+            RespawnAtClosest();
+        }
+        else
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+    }
+
+    private void RespawnAtClosest()
+    {
+        Transform respawn = GetClosestRespawnPoint();
+
+        if (respawn != null)
+        {
+            _rigidBody.linearVelocity = Vector3.zero;
+            transform.position = respawn.position;
+        }
+
+        StartCoroutine(RespawnDelay());
+    }
+
+    private Transform GetClosestRespawnPoint()
+    {
+        GameObject[] respawns = GameObject.FindGameObjectsWithTag("RespawnPoint");
+
+        Transform closest = null;
+        float minDistance = Mathf.Infinity;
+        Vector3 currentPos = transform.position;
+
+        foreach (GameObject r in respawns)
+        {
+            float dist = Vector3.Distance(currentPos, r.transform.position);
+
+            if (dist < minDistance)
+            {
+                minDistance = dist;
+                closest = r.transform;
+            }
+        }
+
+        return closest;
+    }
+
+    private IEnumerator RespawnDelay()
+    {
+        playerInput.actions["Movement"].Disable();
+        yield return new WaitForSeconds(0.2f);
+        playerInput.actions["Movement"].Enable();
     }
 }
