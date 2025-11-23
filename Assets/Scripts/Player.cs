@@ -45,7 +45,7 @@ public class Player : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
     public float dashDirection;
     private bool isDashing = false;
-
+    public bool dashobj = false;
     [Header("Excavar")]
     public float undergroundOffset = -0.8f;
 
@@ -122,7 +122,7 @@ public class Player : MonoBehaviour
                 _rigidBody.linearVelocity.y * jumpCutMultiplier
             );
         }
-        if (playerInput.actions["Dash"].triggered)
+        if (playerInput.actions["Dash"].triggered && dashobj)
         {
             StartCoroutine(Dash());
         }
