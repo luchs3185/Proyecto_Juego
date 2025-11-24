@@ -66,10 +66,14 @@ public class Player : MonoBehaviour
     public double life = 5;
     private bool touchWater = false; //si toca el agua
 
+    [Header("Transición de nivel")]
+    public CanvasGroup fadeCanvas;   // panel negro para el fundido
+    public float fadeTime = 0.3f;    // puración del fundido en segundos
 
     //TAGS
     private string groundTag = "Ground";
     private readonly string waterTag = "Water";
+
 
     void Start()
     {
@@ -559,6 +563,66 @@ public class Player : MonoBehaviour
         }
 
         return closest;
+    }
+
+    // teletransporte con fundido
+    public IEnumerator TeleportWithFade(Vector3 targetPos)
+    {
+        // si no hay panel de fundido asignado, solo teletransporta sin efecto
+        if (fadeCanvas == null)
+        {
+            _rigidBody.linearVelocity = Vector3.zero;
+            transform.position = targetPos;
+            yield break;
+        }
+
+        // desactivar el movimiento del jugador
+        if (playerInput != null)
+        {
+            playerInput.actions["Movement"].Disable();
+        }
+
+        // parar el movimiento
+        _rigidBody.linearVelocity = Vector3.zero;
+
+        // fundido a negro
+        yield return StartCoroutine(Fade(1f));
+
+        // teletransportar
+        transform.position = targetPos;
+
+        // pequeña pausa opcional
+        yield return new WaitForSeconds(0.05f);
+
+        // fundido desde negro (a transparente)
+        yield return StartCoroutine(Fade(0f));
+
+        // volver a activar el movimiento
+        if (playerInput != null)
+        {
+            playerInput.actions["Movement"].Enable();
+        }
+    }
+
+    private IEnumerator Fade(float targetAlpha)
+    {
+        if (fadeCanvas == null)
+        {
+            yield break;
+        }
+
+        float startAlpha = fadeCanvas.alpha;
+        float timer = 0f;
+
+        while (timer < fadeTime)
+        {
+            timer += Time.deltaTime;
+            float t = timer / fadeTime;
+            fadeCanvas.alpha = Mathf.Lerp(startAlpha, targetAlpha, t);
+            yield return null;
+        }
+
+        fadeCanvas.alpha = targetAlpha;
     }
 
     private IEnumerator RespawnDelay()
