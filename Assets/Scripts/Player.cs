@@ -63,8 +63,10 @@ public class Player : MonoBehaviour
     private readonly string normalLayer = "Default";
 
     [Header("Vida")]
-    public double life = 5;
+    public int life = 5;
+    public int maxLife = 5;
     private bool touchWater = false; //si toca el agua
+    public bool iframe = false;
 
     [Header("Transición de nivel")]
     public CanvasGroup fadeCanvas;   // panel negro para el fundido
@@ -88,7 +90,6 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        //Debug.Log(_rigidBody.useGravity);
         transform.rotation = Quaternion.identity;
         direction = playerInput.actions["Movement"].ReadValue<float>();
 
@@ -141,7 +142,6 @@ public class Player : MonoBehaviour
     {
         if (other.CompareTag(waterTag))
         {
-            Debug.Log("Toca");
             touchWater = true;
             TakeDamageWater();
         }
@@ -518,16 +518,27 @@ public class Player : MonoBehaviour
 
 
     private void TakeDamageWater()
-    {   
-        life = life - 0.5;
+    {      
+        if(iframe){
+            return;
+        }
+        iframe = true;
+        life = life - 1;
         if (life > 0)
         {
             RespawnAtClosest();
+            StartCoroutine(InvulnerabilityCooldown()); 
         }
         else
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
+    }
+
+    private IEnumerator InvulnerabilityCooldown()
+    {
+        yield return new WaitForSeconds(0.3f); // evita multi-daño al caer en el agua
+        iframe = false;
     }
 
     private void RespawnAtClosest()
@@ -561,7 +572,6 @@ public class Player : MonoBehaviour
                 closest = r.transform;
             }
         }
-
         return closest;
     }
 
