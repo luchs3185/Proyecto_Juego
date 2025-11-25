@@ -72,6 +72,15 @@ public class Player : MonoBehaviour
     public CanvasGroup fadeCanvas;   // panel negro para el fundido
     public float fadeTime = 0.3f;    // puración del fundido en segundos
 
+    [Header("Melee")]
+    public float meleeRange = 0.9f;
+    public float meleeRadius = 0.6f;
+    public float meleeYOffset = 0.2f;
+    public int meleeDamage = 1;
+    public float meleeCooldown = 0.4f;
+    private float lastMeleeTime = -10f;
+    public LayerMask enemyLayer;
+
     //TAGS
     private string groundTag = "Ground";
     private readonly string waterTag = "Water";
@@ -135,6 +144,13 @@ public class Player : MonoBehaviour
         if (playerInput.actions["Dig"].triggered)
         {
             Dig();
+        }
+
+        // Melee attack
+        if (playerInput.actions["Attack"].triggered && Time.time - lastMeleeTime >= meleeCooldown)
+        {
+            lastMeleeTime = Time.time;
+            PerformMelee();
         }
     }
     //metodo para saber si toca el agua
@@ -535,6 +551,36 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void TakeDamage(int amount)
+    {
+        if (iframe) return;
+        iframe = true;
+
+        life -= amount;
+
+        if (life <= 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+        else
+        {
+            StartCoroutine(InvulnerabilityCooldown());
+            StartCoroutine(HitFlash());
+        }
+    }
+
+    private IEnumerator HitFlash()
+    {
+        if (_spriteRenderer == null) yield break;
+
+        Color originalColor = _spriteRenderer.color;
+        _spriteRenderer.color = Color.red;
+
+        yield return new WaitForSeconds(0.15f);
+
+        _spriteRenderer.color = originalColor;
+    }
+
     private IEnumerator InvulnerabilityCooldown()
     {
         yield return new WaitForSeconds(0.3f); // evita multi-daño al caer en el agua
@@ -633,6 +679,24 @@ public class Player : MonoBehaviour
         }
 
         fadeCanvas.alpha = targetAlpha;
+    }
+
+    private void PerformMelee()
+    {
+        Vector3 origin = transform.position + new Vector3(facingDirection * meleeRange, meleeYOffset, 0f);
+        Collider[] hits = Physics.OverlapSphere(origin, meleeRadius, enemyLayer);
+        if (_animator != null)
+        {
+            _animator.SetTrigger("melee");
+        }
+        foreach (var hit in hits)
+        {
+            EnemyController enemy = hit.GetComponentInParent<EnemyController>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(meleeDamage);
+            }
+        }
     }
 
     private IEnumerator RespawnDelay()
