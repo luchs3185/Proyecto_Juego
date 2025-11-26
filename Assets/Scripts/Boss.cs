@@ -1,9 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class Boss : MonoBehaviour
 {
-
     public Transform player;
     public float detectionRadius = 10.0f;
     public float speed = 3.0f;
@@ -20,12 +19,14 @@ public class EnemyController : MonoBehaviour
 
     private SpriteRenderer _spriteRenderer;
 
+    // NUEVO: objeto que se activará al morir
+    public GameObject objectToActivateOnDeath;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-
     }
 
     void Update()
@@ -51,6 +52,7 @@ public class EnemyController : MonoBehaviour
     {
         if (dead) return;
         health -= amount;
+        Debug.Log("Quita vida");
         if (health <= 0)
         {
             StartCoroutine(DieByDamage());
@@ -104,7 +106,14 @@ public class EnemyController : MonoBehaviour
 
         yield return new WaitForSeconds(0.12f);
 
+        // NUEVO: activamos el objeto oculto
+        if (objectToActivateOnDeath != null)
+        {
+            objectToActivateOnDeath.transform.position = transform.position;
+            objectToActivateOnDeath.transform.rotation = transform.rotation;
+            objectToActivateOnDeath.SetActive(true);
+        }
+
         Destroy(gameObject);
     }
-
 }
