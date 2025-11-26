@@ -85,6 +85,10 @@ public class Player : MonoBehaviour
     private string groundTag = "Ground";
     private readonly string waterTag = "Water";
 
+    [Header("UI")]
+    public LifeBarController lifeBar;
+
+
 
     void Start()
     {
@@ -543,6 +547,8 @@ public class Player : MonoBehaviour
         }
         iframe = true;
         life = life - 1;
+        if (lifeBar != null) lifeBar.UpdateLife(life);
+        
         if (life > 0)
         {
             RespawnAtClosest();
@@ -561,12 +567,16 @@ public class Player : MonoBehaviour
         iframe = true;
 
         life -= amount;
-         Vector3 knockback = new Vector3(
+
+        if (lifeBar != null) lifeBar.UpdateLife(life);
+
+        Vector3 knockback = new Vector3(
             Mathf.Sign(transform.position.x - transform.position.x) * 5f, // horizontal
             6f, // vertical
             0f // no necesitamos Z
         );
          _rigidBody.linearVelocity = knockback;
+        
         if (life <= 0)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
