@@ -5,7 +5,7 @@ public class EnemyController : MonoBehaviour
 {
 
     public Transform player;
-    public float detectionRadius = 5.0f;
+    public float detectionRadius = 10.0f;
     public float speed = 3.0f;
     public int health = 2;
 
@@ -51,6 +51,7 @@ public class EnemyController : MonoBehaviour
     {
         if (dead) return;
         health -= amount;
+        Debug.Log("Quita vida");
         if (health <= 0)
         {
             StartCoroutine(DieByDamage());
@@ -61,10 +62,10 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnCollisionStay(Collision collision)
     {
         if (dead) return;
-
+    
         Player player = collision.gameObject.GetComponentInParent<Player>();
         if (player != null && Time.time - lastAttackTime >= attackCooldown)
         {

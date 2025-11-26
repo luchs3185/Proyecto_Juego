@@ -551,13 +551,19 @@ public class Player : MonoBehaviour
         }
     }
 
+
     public void TakeDamage(int amount)
     {
         if (iframe) return;
         iframe = true;
 
         life -= amount;
-
+         Vector3 knockback = new Vector3(
+            Mathf.Sign(transform.position.x - transform.position.x) * 5f, // horizontal
+            6f, // vertical
+            0f // no necesitamos Z
+        );
+         _rigidBody.linearVelocity = knockback;
         if (life <= 0)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
