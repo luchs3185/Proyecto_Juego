@@ -260,19 +260,21 @@ public class Player : MonoBehaviour
             DoJump();
             jumpsRemaining = 0;
             jumpnum = 1;
+            Debug.Log("Salto simpple 1");
             return;
         }
 
-        if (maxJumps == 2)
+        else if (maxJumps == 2)
         {
             // Primer salto (suelo o coyote time)
-            if (inGround || mayJump > 0f)
+            if ((inGround || mayJump > 0f )&& jumpsRemaining == 2)
             {
                 DoJump();
                 jumpsRemaining = 1;   
                 jumpnum = 1;
                 mayJump = 0f;
                 inGround = false;
+                Debug.Log("Salto doble 1");
                 return;
             }
 
@@ -282,6 +284,7 @@ public class Player : MonoBehaviour
                 DoJump();
                 jumpsRemaining = 0;
                 jumpnum = 2;
+                Debug.Log("Salto doble");
                 return;
             }
         }
@@ -551,13 +554,19 @@ public class Player : MonoBehaviour
         }
     }
 
+
     public void TakeDamage(int amount)
     {
         if (iframe) return;
         iframe = true;
 
         life -= amount;
-
+         Vector3 knockback = new Vector3(
+            Mathf.Sign(transform.position.x - transform.position.x) * 5f, // horizontal
+            6f, // vertical
+            0f // no necesitamos Z
+        );
+         _rigidBody.linearVelocity = knockback;
         if (life <= 0)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
