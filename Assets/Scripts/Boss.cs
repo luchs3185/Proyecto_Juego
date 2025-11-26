@@ -1,0 +1,119 @@
+using System.Collections;
+using UnityEngine;
+
+public class Boss : MonoBehaviour
+{
+    public Transform player;
+    public float detectionRadius = 10.0f;
+    public float speed = 3.0f;
+    public int health = 1;
+
+    private Rigidbody rb;
+    private Vector3 movement;
+    private Collider col;
+    private bool dead = false;
+
+    public int damage = 1;
+    public float attackCooldown = 1f;
+    private float lastAttackTime = 0f;
+
+    private SpriteRenderer _spriteRenderer;
+
+    // NUEVO: objeto que se activará al morir
+    public GameObject objectToActivateOnDeath;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        col = GetComponent<Collider>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+
+        // Si el objeto a activar está asignado, lo aseguramos como inactivo al inicio
+        if (objectToActivateOnDeath != null)
+            objectToActivateOnDeath.SetActive(false);
+    }
+
+    void Update()
+    {
+        if (dead || player == null) return;
+
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        
+        if (distanceToPlayer <= detectionRadius)
+        {
+            Vector3 direction = (player.position - transform.position).normalized;
+            movement = new Vector3(direction.x, 0, direction.z);
+        }
+        else
+        {
+            movement = Vector3.zero;
+        }
+
+        rb.MovePosition(rb.position + movement * speed * Time.deltaTime);
+    }
+
+    public void TakeDamage(int amount)
+    {
+        if (dead) return;
+        health -= amount;
+        Debug.Log("Quita vida");
+        if (health <= 0)
+        {
+            StartCoroutine(DieByDamage());
+        }
+        else
+        {
+            StartCoroutine(HitFlash());
+        }
+    }
+
+    void OnCollisionStay(Collision collision)
+    {
+        if (dead) return;
+    
+        Player player = collision.gameObject.GetComponentInParent<Player>();
+        if (player != null && Time.time - lastAttackTime >= attackCooldown)
+        {
+            lastAttackTime = Time.time;
+            player.TakeDamage(damage);
+        }
+    }
+
+    IEnumerator HitFlash()
+    {
+        if (_spriteRenderer != null)
+        {
+            Color originalColor = _spriteRenderer.color;
+            _spriteRenderer.color = Color.red;
+            yield return new WaitForSeconds(0.15f);
+            _spriteRenderer.color = originalColor;
+        }
+    }
+
+    IEnumerator DieByDamage()
+    {
+        dead = true;
+        if (col != null) col.enabled = false;
+        speed = 0f;
+
+        Vector3 originalScale = transform.localScale;
+        Vector3 targetScale = new Vector3(originalScale.x, originalScale.y * 0.2f, originalScale.z);
+        float duration = 0.12f;
+        float t = 0f;
+
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(originalScale, targetScale, t / duration);
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(0.12f);
+
+        // NUEVO: activamos el objeto oculto
+        if (objectToActivateOnDeath != null)
+            objectToActivateOnDeath.SetActive(true);
+
+        Destroy(gameObject);
+    }
+}
