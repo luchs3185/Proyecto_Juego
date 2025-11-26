@@ -73,13 +73,14 @@ public class Player : MonoBehaviour
     public float fadeTime = 0.3f;    // puración del fundido en segundos
 
     [Header("Melee")]
-    public float meleeRange = 0.9f;
-    public float meleeRadius = 0.6f;
+    public float meleeRange = 5f;
+    public float meleeRadius = 5f;
     public float meleeYOffset = 0.2f;
     public int meleeDamage = 1;
     public float meleeCooldown = 0.4f;
     private float lastMeleeTime = -10f;
     public LayerMask enemyLayer;
+    public bool isMeele = false;
 
     //TAGS
     private string groundTag = "Ground";
@@ -150,9 +151,17 @@ public class Player : MonoBehaviour
         if (playerInput.actions["Attack"].triggered && Time.time - lastMeleeTime >= meleeCooldown)
         {
             lastMeleeTime = Time.time;
+
+            // Actualizamos la dirección antes de atacar
+            facingDirection = _spriteRenderer.flipX ? 1f : -1f;
+
+            // Activamos animación
+            _animator.SetTrigger("Melee");
+
+            // Aplicamos daño
             PerformMelee();
         }
-    }
+        }
     //metodo para saber si toca el agua
     private void OnTriggerEnter(Collider other)
     {
@@ -690,14 +699,18 @@ public class Player : MonoBehaviour
         fadeCanvas.alpha = targetAlpha;
     }
 
-    private void PerformMelee()
+    public void PerformMelee()
     {
+        StartCoroutine(MeleeCoroutine());
+    }
+
+    private IEnumerator MeleeCoroutine()
+    {
+        // Activamos la animación de melee
+        _animator.SetBool("isMeele", true);
+        // Calculamos el origen y aplicamos daño
         Vector3 origin = transform.position + new Vector3(facingDirection * meleeRange, meleeYOffset, 0f);
         Collider[] hits = Physics.OverlapSphere(origin, meleeRadius, enemyLayer);
-        if (_animator != null)
-        {
-            _animator.SetTrigger("melee");
-        }
         foreach (var hit in hits)
         {
             EnemyController enemy = hit.GetComponentInParent<EnemyController>();
@@ -706,6 +719,12 @@ public class Player : MonoBehaviour
                 enemy.TakeDamage(meleeDamage);
             }
         }
+
+        // Esperamos la duración de la animación antes de resetear el bool
+        yield return new WaitForSeconds(meleeCooldown); // o la duración real de la animación
+
+        // Desactivamos la animación
+        _animator.SetBool("isMeele", false);
     }
 
     private IEnumerator RespawnDelay()
