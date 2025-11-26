@@ -52,6 +52,7 @@ public class Player : MonoBehaviour
 
     public float autoDigSpeed = 9f;
     private readonly string digTag = "dig";
+    public bool digobj = false;
     private Collider[] myColliders;
     private Transform digZone;
     private Vector2 digDirection;
@@ -147,7 +148,7 @@ public class Player : MonoBehaviour
             StartCoroutine(Dash());
         }
 
-        if (playerInput.actions["Dig"].triggered)
+        if (playerInput.actions["Dig"].triggered && digobj)
         {
             Dig();
         }
@@ -159,9 +160,6 @@ public class Player : MonoBehaviour
 
             // Actualizamos la dirección antes de atacar
             facingDirection = _spriteRenderer.flipX ? 1f : -1f;
-
-            // Activamos animación
-            _animator.SetTrigger("Melee");
 
             // Aplicamos daño
             PerformMelee();
