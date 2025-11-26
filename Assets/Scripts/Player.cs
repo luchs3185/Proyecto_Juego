@@ -46,10 +46,10 @@ public class Player : MonoBehaviour
     public float dashDirection;
     private bool isDashing = false;
     public bool dashobj = false;
+
     [Header("Excavar")]
     public float undergroundOffset = -0.8f;
-
-    public float autoDigSpeed = 9f;
+    public float autoDigSpeed = 1f;
     private readonly string digTag = "dig";
     private Collider[] myColliders;
     private Transform digZone;
@@ -489,30 +489,34 @@ public class Player : MonoBehaviour
     private IEnumerator AutoMoveVerticalDig()
     {
         if (digZone == null) yield break;
-        Collider digCollider = digZone.GetComponent<Collider>();
-        float targetY = transform.position.y > digCollider.bounds.center.y
-                        ? digCollider.bounds.min.y
-                        : digCollider.bounds.max.y;
 
+        Collider digCollider = digZone.GetComponent<Collider>();
+        float offset = 0.01f; // pequeño margen para no quedarse atrapado
+        float targetY = transform.position.y > digCollider.bounds.center.y
+                        ? digCollider.bounds.min.y - offset
+                        : digCollider.bounds.max.y + offset;
+
+        _rigidBody.isKinematic = true; // ignorar física mientras mueve
         _rigidBody.useGravity = false;
 
-        while (isDigging && Mathf.Abs(transform.position.y - targetY) > 0.01f)
+        while (isDigging && Mathf.Abs(transform.position.y - targetY) > 0.001f)
         {
-
             float dir = targetY > transform.position.y ? 1f : -1f;
-            Vector3 nextPos = transform.position + Vector3.up * dir * autoDigSpeed * Time.fixedDeltaTime;
+            float nextY = transform.position.y + autoDigSpeed * dir; // sin deltaTime para moverse rápido
 
-            if ((dir > 0 && nextPos.y > targetY) || (dir < 0 && nextPos.y < targetY))
-                nextPos.y = targetY;
+            if ((dir > 0 && nextY > targetY) || (dir < 0 && nextY < targetY))
+                nextY = targetY;
 
-            _rigidBody.MovePosition(nextPos);
+            transform.position = new Vector3(transform.position.x, nextY, transform.position.z);
 
-            yield return new WaitForFixedUpdate();
+            yield return null; // actualiza cada frame
         }
+
+        _rigidBody.isKinematic = false;
+        _rigidBody.useGravity = true;
 
         StopDig();
     }
-
 
 
     private IEnumerator AutoMoveHorizontalDig()
@@ -524,26 +528,19 @@ public class Player : MonoBehaviour
             ? digCollider.bounds.max.x
             : digCollider.bounds.min.x;
 
-        _rigidBody.useGravity = false;
-
         float dir = targetX > transform.position.x ? 1f : -1f;
-
-        while (isDigging && Mathf.Abs(_rigidBody.position.x - targetX) > 0.001f)
+        while (isDigging && Mathf.Abs(transform.position.x - targetX) > 0.001f)
         {
-            Vector3 nextPos = transform.position + autoDigSpeed * dir * Time.fixedDeltaTime * Vector3.right;
+            float nextX = transform.position.x + autoDigSpeed * dir;
 
-            if (dir > 0 && nextPos.x > targetX)
-                nextPos.x = targetX;
+            // Limitar para no pasarse del objetivo
+            if ((dir > 0 && nextX > targetX) || (dir < 0 && nextX < targetX))
+                nextX = targetX;
 
-            if    (dir < 0 && nextPos.x < targetX){
-                nextPos.x = targetX;
-                Debug.Log(nextPos.x + ", "+ targetX);
-            }
-            _rigidBody.MovePosition(nextPos);
+            transform.position = new Vector3(nextX, transform.position.y, transform.position.z);
 
-            yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate(); // actualiza cada frame
         }
-
         StopDig();
     }
 
