@@ -27,10 +27,6 @@ public class Boss : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-
-        // Si el objeto a activar está asignado, lo aseguramos como inactivo al inicio
-        if (objectToActivateOnDeath != null)
-            objectToActivateOnDeath.SetActive(false);
     }
 
     void Update()
@@ -112,7 +108,11 @@ public class Boss : MonoBehaviour
 
         // NUEVO: activamos el objeto oculto
         if (objectToActivateOnDeath != null)
+        {
+            objectToActivateOnDeath.transform.position = transform.position;
+            objectToActivateOnDeath.transform.rotation = transform.rotation;
             objectToActivateOnDeath.SetActive(true);
+        }
 
         Destroy(gameObject);
     }

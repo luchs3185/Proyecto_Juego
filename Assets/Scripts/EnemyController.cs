@@ -51,7 +51,6 @@ public class EnemyController : MonoBehaviour
     {
         if (dead) return;
         health -= amount;
-        Debug.Log("Quita vida");
         if (health <= 0)
         {
             StartCoroutine(DieByDamage());

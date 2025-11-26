@@ -1463,6 +1463,7 @@ GameObject:
   - component: {fileID: 142824577}
   - component: {fileID: 142824576}
   - component: {fileID: 142824575}
+  - component: {fileID: 142824579}
   m_Layer: 0
   m_Name: Sphere Dig
   m_TagString: Untagged
@@ -1485,7 +1486,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -1556,12 +1557,25 @@ Transform:
   m_GameObject: {fileID: 142824574}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 84.63, y: 17.71, z: 0}
+  m_LocalPosition: {x: -4.4, y: 24.3, z: 0}
   m_LocalScale: {x: 1.5567, y: 1.3897, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &142824579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 142824574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cc5889407491a941835bdd1124b1cf7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Proyecto_Juego.Runtime::DigObj
+  destroyDelay: 0.1
 --- !u!1 &146593983
 GameObject:
   m_ObjectHideFlags: 0
@@ -4720,8 +4734,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 992923876}
   - {fileID: 1352692737}
+  - {fileID: 992923876}
   - {fileID: 309083201}
   - {fileID: 1809472186}
   - {fileID: 247249709}
@@ -13331,8 +13345,10 @@ GameObject:
   - component: {fileID: 1352692740}
   - component: {fileID: 1352692739}
   - component: {fileID: 1352692738}
+  - component: {fileID: 1352692741}
+  - component: {fileID: 1352692742}
   m_Layer: 8
-  m_Name: Sphere -FINAL BOSS
+  m_Name: FINAL BOSS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13430,6 +13446,52 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1352692736}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1352692741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352692736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4149327395fc999459fdd48b6cd6521e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Proyecto_Juego.Runtime::Boss
+  player: {fileID: 2642398287520389310}
+  detectionRadius: 10
+  speed: 3
+  health: 1
+  damage: 1
+  attackCooldown: 1
+  objectToActivateOnDeath: {fileID: 142824574}
+--- !u!54 &1352692742
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352692736}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 72
+  m_CollisionDetection: 0
 --- !u!1 &1363795990
 GameObject:
   m_ObjectHideFlags: 0
@@ -22231,11 +22293,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8540794081819198946, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 544.2
+      value: 9.8
       objectReference: {fileID: 0}
     - target: {fileID: 8540794081819198946, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 50.3
+      value: 36.9
       objectReference: {fileID: 0}
     - target: {fileID: 8540794081819198946, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
       propertyPath: m_LocalPosition.z
