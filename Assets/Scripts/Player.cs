@@ -137,10 +137,10 @@ public class Player : MonoBehaviour
         }
         if (playerInput.actions["jump"].WasReleasedThisFrame() && _rigidBody.linearVelocity.y > 0f && jumpnum == 1)
         {
-             _rigidBody.linearVelocity = new Vector2(
-                _rigidBody.linearVelocity.x,
-                _rigidBody.linearVelocity.y * jumpCutMultiplier
-            );
+            _rigidBody.linearVelocity = new Vector2(
+               _rigidBody.linearVelocity.x,
+               _rigidBody.linearVelocity.y * jumpCutMultiplier
+           );
         }
         if (playerInput.actions["Dash"].triggered && dashobj)
         {
@@ -166,7 +166,7 @@ public class Player : MonoBehaviour
             // Aplicamos daño
             PerformMelee();
         }
-        }
+    }
     //metodo para saber si toca el agua
     private void OnTriggerEnter(Collider other)
     {
@@ -234,15 +234,15 @@ public class Player : MonoBehaviour
     }
     void OnCollisionStay(Collision collision)
     {
-    // Mientras exista al menos un contacto válido con suelo = seguimos en el suelo
+        // Mientras exista al menos un contacto válido con suelo = seguimos en el suelo
         if (IsGroundContact(collision))
         {
-        inGround = true;
+            inGround = true;
         }
     }
     void OnCollisionExit(Collision collision)
     {
-            inGround = false;
+        inGround = false;
     }
 
     public void Move(CallbackContext context)
@@ -262,15 +262,17 @@ public class Player : MonoBehaviour
     //SALTO
     private void TryJump()
     {
-        if (jumpsRemaining <= 0){
+        if (jumpsRemaining <= 0)
+        {
             return;
         }
 
         if (maxJumps == 1)
         {
-            if(!inGround){
+            if (!inGround)
+            {
                 return;
-            }  
+            }
             DoJump();
             jumpsRemaining = 0;
             jumpnum = 1;
@@ -281,10 +283,10 @@ public class Player : MonoBehaviour
         else if (maxJumps == 2)
         {
             // Primer salto (suelo o coyote time)
-            if ((inGround || mayJump > 0f )&& jumpsRemaining == 2)
+            if ((inGround || mayJump > 0f) && jumpsRemaining == 2)
             {
                 DoJump();
-                jumpsRemaining = 1;   
+                jumpsRemaining = 1;
                 jumpnum = 1;
                 mayJump = 0f;
                 inGround = false;
@@ -307,7 +309,7 @@ public class Player : MonoBehaviour
     private void DoJump()
     {
         _animator.SetBool("isJumping", true);
-       _rigidBody.linearVelocity = new Vector2(_rigidBody.linearVelocity.x, 0); // reinicia la velocidad vertical
+        _rigidBody.linearVelocity = new Vector2(_rigidBody.linearVelocity.x, 0); // reinicia la velocidad vertical
         _rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
@@ -350,9 +352,9 @@ public class Player : MonoBehaviour
     //EXCAVAR
     public void Dig()
     {
-        if (!isDigging)
+        if (!isDigging )
         {
-            if (IsDiggableAboveBox() || IsDiggableBelowBox() || IsDiggableLeft() || IsDiggableRight())
+            if (IsDiggableAboveBox() || IsDiggableBelowBox()&& inGround || IsDiggableLeft() || IsDiggableRight())
                 StartDig();
             else
                 return;
@@ -372,7 +374,8 @@ public class Player : MonoBehaviour
         isDigging = true;
         gameObject.layer = LayerMask.NameToLayer(undergroundLayer);
         _rigidBody.useGravity = false;
-
+        _rigidBody.linearVelocity = Vector3.zero;
+        _rigidBody.angularVelocity = Vector3.zero;
         IgnoreTagCollisions(true);
 
         transform.position += new Vector3(digDirection.x * undergroundOffset, digDirection.y * undergroundOffset, 0);
@@ -500,10 +503,10 @@ public class Player : MonoBehaviour
 
         _rigidBody.useGravity = false;
 
+        float dir = targetY > transform.position.y ? 1f : -1f;
         while (isDigging && Mathf.Abs(transform.position.y - targetY) > 0.01f)
         {
 
-            float dir = targetY > transform.position.y ? 1f : -1f;
             Vector3 nextPos = transform.position + Vector3.up * dir * autoDigSpeed * Time.fixedDeltaTime;
 
             if ((dir > 0 && nextPos.y > targetY) || (dir < 0 && nextPos.y < targetY))
@@ -543,9 +546,10 @@ public class Player : MonoBehaviour
                 nextPos.x = targetX;
 
 
-            if    (dir < 0 && nextPos.x < targetX){
+            if (dir < 0 && nextPos.x < targetX)
+            {
                 nextPos.x = targetX;
-                Debug.Log(nextPos.x + ", "+ targetX);
+                Debug.Log(nextPos.x + ", " + targetX);
             }
             _rigidBody.MovePosition(nextPos);
 
@@ -558,8 +562,9 @@ public class Player : MonoBehaviour
 
 
     private void TakeDamageWater()
-    {      
-        if(iframe){
+    {
+        if (iframe)
+        {
             return;
         }
         iframe = true;
@@ -569,7 +574,7 @@ public class Player : MonoBehaviour
         if (life > 0)
         {
             RespawnAtClosest();
-            StartCoroutine(InvulnerabilityCooldown()); 
+            StartCoroutine(InvulnerabilityCooldown());
         }
         else
         {
@@ -592,7 +597,7 @@ public class Player : MonoBehaviour
             6f, // vertical
             0f // no necesitamos Z
         );
-         _rigidBody.linearVelocity = knockback;
+        _rigidBody.linearVelocity = knockback;
 
         if (life <= 0)
         {
