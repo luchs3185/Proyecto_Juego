@@ -9055,7 +9055,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 441ec378fc8e0fd43805dea86ecd8d05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Proyecto_Juego.Runtime::PortalConFade
-  destino: {fileID: 242975776}
 --- !u!65 &891214920
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17806,7 +17805,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 441ec378fc8e0fd43805dea86ecd8d05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Proyecto_Juego.Runtime::PortalConFade
-  destino: {fileID: 169705646}
 --- !u!65 &1738009992
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -21360,8 +21358,84 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_Actions
+      value: 
+      objectReference: {fileID: -944628639613478452, guid: 9cfc86c4a69242f4a8d6a8fbe938204b, type: 3}
+    - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_ActionEvents.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[0].m_ActionId
+      value: 86d4e9b2-9569-4d42-8f60-2b661a739be7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_ActionId
+      value: f76cf7bd-bff2-43a8-a9b3-d5b49788ad93
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_ActionId
+      value: 50b050da-8f1a-425b-b195-e4055b62b2f6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[3].m_ActionId
+      value: 3e6363f7-7892-4cea-ace5-d6e2ecd004e4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[4].m_ActionId
+      value: 85ac3318-2d93-4e10-aa11-d7afc7f14535
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_ActionId
+      value: 7fd9d5b7-cc0c-4333-b705-7fc6ff02ccb8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[6].m_ActionId
+      value: 93b92383-1b48-4236-a09e-3bfc0c87be17
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[0].m_ActionName
+      value: 'Player/Movement[/Keyboard/a,/Keyboard/d]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_ActionName
+      value: 'Player/Jump[/Keyboard/space]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_ActionName
+      value: 'Player/Reset[/Keyboard/r]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[3].m_ActionName
+      value: 'Player/Dash[/Keyboard/leftShift]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[4].m_ActionName
+      value: 'Player/Attack[/Keyboard/e]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_ActionName
+      value: 'Player/Dig[/Keyboard/q]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[6].m_ActionName
+      value: 'Player/UpDown[/Keyboard/s,/Keyboard/w]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[0].m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
       propertyPath: m_ActionEvents.Array.data[3].m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1221534043395814947, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
       propertyPath: m_ActionEvents.Array.data[3].m_PersistentCalls.m_Calls.Array.data[0].m_Mode

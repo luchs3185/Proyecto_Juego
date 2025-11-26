@@ -4,57 +4,39 @@
     "maps": [
         {
             "name": "Player",
-            "id": "f5e4ab0e-86ca-42a6-bd78-f5545bcedcc3",
+            "id": "a955c160-6e42-4c69-a7a1-c26020aac6e7",
             "actions": [
-                {
-                    "name": "jump",
-                    "type": "Button",
-                    "id": "dedd23e4-3310-48ab-9945-c47fe0e95a63",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
                 {
                     "name": "Movement",
                     "type": "Value",
-                    "id": "4ee8c46d-f0f4-4bd6-9624-38629e7443ca",
-                    "expectedControlType": "",
+                    "id": "86d4e9b2-9569-4d42-8f60-2b661a739be7",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
                 },
                 {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "f76cf7bd-bff2-43a8-a9b3-d5b49788ad93",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Reset",
+                    "type": "Button",
+                    "id": "50b050da-8f1a-425b-b195-e4055b62b2f6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Dash",
                     "type": "Button",
-                    "id": "075dc22f-3587-48ba-9dc1-a4fa1c592d02",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Dig",
-                    "type": "Button",
-                    "id": "82805df1-9279-44f6-81cd-b3e1b6148cfc",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "reset",
-                    "type": "Button",
-                    "id": "b4d1c784-65ba-41d0-8af1-b732b90ca77c",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "UpDown",
-                    "type": "Button",
-                    "id": "11365af9-d5ed-45d5-b8ac-31db67bf00f5",
+                    "id": "3e6363f7-7892-4cea-ace5-d6e2ecd004e4",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -63,39 +45,35 @@
                 {
                     "name": "Attack",
                     "type": "Button",
-                    "id": "a1b2c3d4-0000-4000-8000-000000000001",
+                    "id": "85ac3318-2d93-4e10-aa11-d7afc7f14535",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Dig",
+                    "type": "Button",
+                    "id": "7fd9d5b7-cc0c-4333-b705-7fc6ff02ccb8",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "UpDown",
+                    "type": "Value",
+                    "id": "93b92383-1b48-4236-a09e-3bfc0c87be17",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
                 {
-                    "name": "",
-                    "id": "5297bc97-c4a5-4a58-ac0a-df1fba9a5bed",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "jump",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "8a827ab3-44d9-40c5-befc-a12d9b81d5cd",
-                    "path": "<Gamepad>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "jump",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
                     "name": "1D Axis",
-                    "id": "217675a3-e403-4617-ab24-e0ebebee27f6",
+                    "id": "f0d93307-1899-4f97-aa79-d658490f785c",
                     "path": "1DAxis",
                     "interactions": "",
                     "processors": "",
@@ -106,7 +84,7 @@
                 },
                 {
                     "name": "negative",
-                    "id": "ca3f9b71-88a8-4d73-b9d2-22b8c72e879b",
+                    "id": "5f311305-76a0-40fd-93a9-bd7dcf829fa3",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
@@ -117,7 +95,7 @@
                 },
                 {
                     "name": "positive",
-                    "id": "b6f9e7e6-2bf4-4f2e-8504-2fb1c0e32874",
+                    "id": "3386417b-5fc4-42f6-9e99-5c133b5beedf",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
@@ -127,41 +105,30 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "1D Axis",
-                    "id": "5a436845-5e50-43d8-b6ba-527bca008a03",
-                    "path": "1DAxis",
+                    "name": "",
+                    "id": "d5f490bc-7fe9-4619-9aca-c406bcd2c51a",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Movement",
-                    "isComposite": true,
+                    "action": "Jump",
+                    "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "negative",
-                    "id": "c60ddb9a-2988-4c80-8621-eb50c48ee559",
-                    "path": "<Gamepad>/leftStick/left",
+                    "name": "",
+                    "id": "3a2795f4-2545-4257-9587-78df8677a060",
+                    "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Movement",
+                    "action": "Reset",
                     "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "6eb7950b-4514-4d01-9eb6-3d7cfb0749f9",
-                    "path": "<Gamepad>/leftStick/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Movement",
-                    "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "2309db6c-b2b8-42fe-8552-95c2068b15d7",
+                    "id": "8df96ef7-d91f-46b6-89d8-85e8fb875d02",
                     "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
@@ -172,106 +139,7 @@
                 },
                 {
                     "name": "",
-                    "id": "81cc8647-a353-4fc4-9b19-81bfdad7806e",
-                    "path": "<Gamepad>/rightTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Dash",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f55165ce-222d-4f9c-bb6d-1e7c8b068a22",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Dig",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f2789b43-c3ad-4dee-b9e9-a8fa9fe44b5e",
-                    "path": "<Keyboard>/r",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "reset",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "1D Axis",
-                    "id": "d3976159-2b29-4158-91f7-8bb7712f62d6",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "UpDown",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "34156adc-7caf-434f-9723-15ad4fba4bea",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "UpDown",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "369c6780-dbcf-4a60-833e-fce14f84fe95",
-                    "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "UpDown",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "1D Axis",
-                    "id": "998cce89-9afe-42ca-a96a-c7efbe114c39",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "UpDown",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "6d8fe6a2-5256-47dd-8e80-c8bb5b77c98e",
-                    "path": "<Gamepad>/leftStick/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "UpDown",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "991a0c5a-9724-40c2-b368-64b0c52cda00",
-                    "path": "<Gamepad>/leftStick/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "UpDown",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "attack-keyboard-0001",
+                    "id": "27be1399-511e-4d7a-88c1-be07d3ea1654",
                     "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
@@ -282,14 +150,47 @@
                 },
                 {
                     "name": "",
-                    "id": "attack-mouse-0001",
-                    "path": "<Mouse>/leftButton",
+                    "id": "1bdb7012-2d5c-4fdd-a5c9-27cd219f7e1e",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Attack",
+                    "action": "Dig",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "6d3ae928-6992-418d-99f0-e457e57fe375",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UpDown",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "cfea5c19-65c1-475d-ae4a-a1a53f994ded",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UpDown",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "04133314-12a1-48bd-b772-edbd1eb72a26",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UpDown",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }
