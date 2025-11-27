@@ -478,7 +478,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 39308116}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.7}
   m_LocalScale: {x: 0.93975, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2572,7 +2572,7 @@ MonoBehaviour:
   player: {fileID: 2642398287520389310}
   detectionRadius: 10
   speed: 3
-  health: 2
+  health: 1
   damage: 1
   attackCooldown: 1
 --- !u!54 &247249714
@@ -4837,7 +4837,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 451268861}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 1505db829b23be840998832fc65ed7f3, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -7731,6 +7731,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 884271157}
+  - {fileID: 962335207}
   - {fileID: 1923444295}
   - {fileID: 1835897584}
   - {fileID: 1507204565}
@@ -10630,6 +10631,46 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 956604527}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &962335206
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 962335207}
+  - component: {fileID: 962335208}
+  m_Layer: 0
+  m_Name: Respawn1A (1)
+  m_TagString: RespawnPoint
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &962335207
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 962335206}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -55.19, y: 40.15, z: -382.54303}
+  m_LocalScale: {x: 1.0071106, y: 1.041042, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 718527371}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &962335208
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 962335206}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &971272638
 GameObject:
   m_ObjectHideFlags: 0
@@ -11448,7 +11489,7 @@ MonoBehaviour:
   player: {fileID: 2642398287520389310}
   detectionRadius: 10
   speed: 3
-  health: 2
+  health: 1
   damage: 1
   attackCooldown: 1
 --- !u!1 &1026573914
@@ -11967,13 +12008,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1036403797}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7080398, y: 0.706147, z: -0.0043987385, w: -0.0040951553}
-  m_LocalPosition: {x: 108.95892, y: 45.2517, z: 0.1904}
+  m_LocalRotation: {x: -0.7080043, y: 0.70610636, z: 0.008346156, w: 0.008615613}
+  m_LocalPosition: {x: 108.95899, y: 45.25171, z: 0.19040042}
   m_LocalScale: {x: 5.985899, y: 5.519422, z: 0.9999761}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 978163399}
-  m_LocalEulerAnglesHint: {x: 0.69, y: 180, z: -90}
+  m_LocalEulerAnglesHint: {x: -1.374, y: 179.98, z: -90.154}
 --- !u!1 &1082162419
 GameObject:
   m_ObjectHideFlags: 0
@@ -14462,7 +14503,7 @@ MonoBehaviour:
   player: {fileID: 2642398287520389310}
   detectionRadius: 10
   speed: 3
-  health: 2
+  health: 1
   damage: 1
   attackCooldown: 1
 --- !u!1 &1374021249
@@ -14882,7 +14923,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1401747112}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 1505db829b23be840998832fc65ed7f3, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -14994,7 +15035,7 @@ MonoBehaviour:
   player: {fileID: 2642398287520389310}
   detectionRadius: 10
   speed: 3
-  health: 2
+  health: 1
   damage: 1
   attackCooldown: 1
 --- !u!1 &1404620747
@@ -15143,7 +15184,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -15943,8 +15984,8 @@ Transform:
   m_GameObject: {fileID: 1477380256}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 26.412247, y: -16.003597, z: 0}
-  m_LocalScale: {x: 1.2904892, y: 1, z: 1}
+  m_LocalPosition: {x: 12.64199, y: -16.003597, z: 0}
+  m_LocalScale: {x: 0.6144664, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1322926074}
@@ -17265,7 +17306,7 @@ Transform:
   m_GameObject: {fileID: 1607390206}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 570.62, y: 56.14, z: 0}
+  m_LocalPosition: {x: 570.62, y: 56.14, z: 0.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -17356,7 +17397,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1607390206}
   serializedVersion: 5
-  m_Mass: 1
+  m_Mass: 7
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -17373,7 +17414,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 72
+  m_Constraints: 120
   m_CollisionDetection: 0
 --- !u!114 &1607390212
 MonoBehaviour:
@@ -17390,7 +17431,7 @@ MonoBehaviour:
   player: {fileID: 2642398287520389310}
   detectionRadius: 10
   speed: 3
-  health: 2
+  health: 1
   damage: 1
   attackCooldown: 1
 --- !u!1 &1610762590
@@ -23755,6 +23796,14 @@ PrefabInstance:
       propertyPath: fadeCanvas
       value: 
       objectReference: {fileID: 453870581}
+    - target: {fileID: 7936594041477022980, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: meleeRange
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7936594041477022980, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
+      propertyPath: meleeRadius
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 7936594041477022980, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
       propertyPath: autoDigSpeed
       value: 8
