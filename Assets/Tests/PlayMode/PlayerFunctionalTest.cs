@@ -80,13 +80,30 @@ public class PlayerFunctionalTest{
 
         typeof(Player).GetField("_rigidBody", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(player, body);
 
+        // Crear InputActionAsset con todas las acciones necesarias
+        var asset = ScriptableObject.CreateInstance<InputActionAsset>();
+        var map = new InputActionMap("Gameplay");
+        map.AddAction("Movement", InputActionType.Value).AddBinding("<Gamepad>/leftStick");
+        map.AddAction("reset", InputActionType.Button).AddBinding("<Keyboard>/r");
+        map.AddAction("jump", InputActionType.Button).AddBinding("<Keyboard>/space");
+        map.AddAction("Dash", InputActionType.Button).AddBinding("<Keyboard>/shift");
+        map.AddAction("Dig", InputActionType.Button).AddBinding("<Keyboard>/ctrl");
+        map.AddAction("Attack", InputActionType.Button).AddBinding("<Keyboard>/x");
+        asset.AddActionMap(map);
+
+        var input = playerObj.AddComponent<PlayerInput>();
+        input.actions = asset;
+        input.defaultActionMap = "Gameplay";
+
+        typeof(Player).GetField("playerInput", BindingFlags.NonPublic | BindingFlags.Instance)?.SetValue(player, input);
+
         var waterObj = new GameObject("Water");
         waterObj.tag = "Water";
         waterObj.AddComponent<BoxCollider>();
         waterObj.GetComponent<Collider>().isTrigger = true;
 
         //Asegura que el jugador no ha tocado agua antes
-        typeof(Player).GetField("touchedWater", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)?.SetValue(player, false);
+        typeof(Player).GetField("touchWater", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)?.SetValue(player, false);
 
         yield return null;
 
@@ -96,7 +113,7 @@ public class PlayerFunctionalTest{
 
         yield return null;
 
-        bool touchedWater = (bool)(typeof(Player).GetField("touchedWater", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)?.GetValue(player) ?? false);
+        bool touchedWater = (bool)(typeof(Player).GetField("touchWater", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)?.GetValue(player) ?? false);
 
         Assert.IsTrue(touchedWater, "OnTriggerEnter no detectó la colisión con un objeto con tag 'Water'");
 
@@ -134,6 +151,7 @@ public class PlayerFunctionalTest{
         map.AddAction("jump", InputActionType.Button).AddBinding("<Keyboard>/space");
         map.AddAction("Dash", InputActionType.Button).AddBinding("<Keyboard>/shift");
         map.AddAction("Dig", InputActionType.Button).AddBinding("<Keyboard>/ctrl");
+        map.AddAction("Attack", InputActionType.Button).AddBinding("<Keyboard>/x");
         asset.AddActionMap(map);
 
         var input = playerObj.AddComponent<PlayerInput>();
@@ -198,6 +216,7 @@ public class PlayerFunctionalTest{
         map.AddAction("jump", InputActionType.Button).AddBinding("<Keyboard>/space");
         map.AddAction("Dash", InputActionType.Button).AddBinding("<Keyboard>/shift");
         map.AddAction("Dig", InputActionType.Button).AddBinding("<Keyboard>/ctrl");
+        map.AddAction("Attack", InputActionType.Button).AddBinding("<Keyboard>/x");
         asset.AddActionMap(map);
         var input = playerObj.AddComponent<PlayerInput>();
         input.actions = asset;
