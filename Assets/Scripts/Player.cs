@@ -75,8 +75,8 @@ public class Player : MonoBehaviour
     public float fadeTime = 0.3f;    // puración del fundido en segundos
 
     [Header("Melee")]
-    public float meleeRange = 5f;
-    public float meleeRadius = 5f;
+    public float meleeRange = 2f;
+    public float meleeRadius = 2f;
     public float meleeYOffset = 0.2f;
     public int meleeDamage = 1;
     public float meleeCooldown = 0.4f;
