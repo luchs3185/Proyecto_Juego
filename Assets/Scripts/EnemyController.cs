@@ -93,7 +93,7 @@ public class EnemyController : MonoBehaviour
         if (p != null && Time.time - lastAttackTime >= attackCooldown)
         {
             lastAttackTime = Time.time;
-            p.TakeDamage(damage);
+            p.TakeDamage(1, transform.position);   
         }
     }
 

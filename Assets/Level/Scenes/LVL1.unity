@@ -7633,6 +7633,7 @@ GameObject:
   m_Component:
   - component: {fileID: 718168673}
   - component: {fileID: 718168672}
+  - component: {fileID: 718168674}
   m_Layer: 0
   m_Name: Background_N1.3
   m_TagString: Untagged
@@ -7706,13 +7707,27 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 718168671}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 565.4, y: 55.6, z: 2}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 19.50647, y: 55.6, z: -722.40826}
   m_LocalScale: {x: 1.2931, y: 1.4224, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1772364919}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &718168674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 718168671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7330f94ae876ed44e8205a2ea745c4f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Proyecto_Juego.Runtime::Parallax
+  parallaxFactor: 0.65
+  verticalFactor: 0.2
 --- !u!1 &718527370
 GameObject:
   m_ObjectHideFlags: 0
@@ -11765,6 +11780,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1046215903}
   - component: {fileID: 1046215902}
+  - component: {fileID: 1046215904}
   m_Layer: 0
   m_Name: Background_N1.2
   m_TagString: Untagged
@@ -11838,13 +11854,27 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1046215901}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 565.5, y: 55.6, z: 111}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 19.606445, y: 55.6, z: -613.40826}
   m_LocalScale: {x: 1.2765828, y: 1.4178463, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1772364919}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1046215904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1046215901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7330f94ae876ed44e8205a2ea745c4f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Proyecto_Juego.Runtime::Parallax
+  parallaxFactor: 0.6
+  verticalFactor: 0.25
 --- !u!1 &1076313391
 GameObject:
   m_ObjectHideFlags: 0
@@ -12573,6 +12603,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1177581489}
   - component: {fileID: 1177581488}
+  - component: {fileID: 1177581490}
   m_Layer: 0
   m_Name: Background_N1.1
   m_TagString: Untagged
@@ -12646,13 +12677,27 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1177581487}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 566.1234, y: 56.4, z: 133.6}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 20.229858, y: 56.4, z: -590.8082}
   m_LocalScale: {x: 1.3709377, y: 1.4123573, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1772364919}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1177581490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1177581487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7330f94ae876ed44e8205a2ea745c4f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Proyecto_Juego.Runtime::Parallax
+  parallaxFactor: 0.3
+  verticalFactor: 0.15
 --- !u!1 &1180968961
 GameObject:
   m_ObjectHideFlags: 0
@@ -19694,6 +19739,41 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27cc0b0187513173795ff48167676cf3, type: 3}
+--- !u!1 &1772364918
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1772364919}
+  m_Layer: 0
+  m_Name: Background
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1772364919
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772364918}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 545.89355, y: 0, z: 724.40826}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1906592515}
+  - {fileID: 1177581489}
+  - {fileID: 1046215903}
+  - {fileID: 718168673}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1804498848
 GameObject:
   m_ObjectHideFlags: 0
@@ -21048,6 +21128,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1906592515}
   - component: {fileID: 1906592514}
+  - component: {fileID: 1906592516}
   m_Layer: 0
   m_Name: Background_N1
   m_TagString: Untagged
@@ -21121,13 +21202,27 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1906592513}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 567.3228, y: 58.9491, z: 210.4}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 21.42926, y: 58.9491, z: -514.0083}
   m_LocalScale: {x: 1.7083595, y: 2.0356045, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1772364919}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1906592516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1906592513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7330f94ae876ed44e8205a2ea745c4f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Proyecto_Juego.Runtime::Parallax
+  parallaxFactor: 0.05
+  verticalFactor: 0.05
 --- !u!1 &1923444293
 GameObject:
   m_ObjectHideFlags: 0
@@ -24145,7 +24240,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7936594041477022980, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
       propertyPath: dashobj
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7936594041477022980, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
       propertyPath: lifeBar
@@ -24153,7 +24248,7 @@ PrefabInstance:
       objectReference: {fileID: 1436217357}
     - target: {fileID: 7936594041477022980, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
       propertyPath: maxJumps
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7936594041477022980, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
       propertyPath: coyoteTime
@@ -24193,11 +24288,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8540794081819198946, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 54.43
+      value: 544
       objectReference: {fileID: 0}
     - target: {fileID: 8540794081819198946, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 21.23
+      value: 51
       objectReference: {fileID: 0}
     - target: {fileID: 8540794081819198946, guid: 70ad165c7e70915f6a7d25dff448752f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -24459,7 +24554,4 @@ SceneRoots:
   - {fileID: 1746137387}
   - {fileID: 1810693994}
   - {fileID: 2072595756}
-  - {fileID: 1906592515}
-  - {fileID: 1177581489}
-  - {fileID: 1046215903}
-  - {fileID: 718168673}
+  - {fileID: 1772364919}
