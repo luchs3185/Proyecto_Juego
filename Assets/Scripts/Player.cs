@@ -84,6 +84,16 @@ public class Player : MonoBehaviour
     public LayerMask enemyLayer;
     public bool isMeele = false;
 
+    [Header("Melee avanzado")]  
+    public float meleeAnticipation = 0.08f;
+    public float meleeActiveTime = 0.05f;
+    public float meleeRecovery = 0.12f;
+
+    public float hitStopTime = 0.05f;
+    public float hitShakeIntensity = 0.15f;
+
+    private bool isAttacking = false;
+
     //TAGS
     private string groundTag = "Ground";
     private readonly string waterTag = "Water";
@@ -154,15 +164,15 @@ public class Player : MonoBehaviour
         }
 
         // Melee attack
-        if (playerInput.actions["Attack"].triggered && Time.time - lastMeleeTime >= meleeCooldown)
+        if (playerInput.actions["Attack"].triggered 
+            && Time.time - lastMeleeTime >= meleeCooldown
+            && !isDashing
+            && !isAttacking)
         {
             lastMeleeTime = Time.time;
 
-            // Actualizamos la dirección antes de atacar
             facingDirection = _spriteRenderer.flipX ? 1f : -1f;
-
-            // Aplicamos daño
-            PerformMelee();
+            StartCoroutine(MeleeCoroutine());
         }
     }
     //metodo para saber si toca el agua
@@ -581,7 +591,7 @@ public class Player : MonoBehaviour
     }
 
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(int amount, Vector3 damageSource)
     {
         if (iframe) return;
         iframe = true;
@@ -590,11 +600,8 @@ public class Player : MonoBehaviour
 
         if (lifeBar != null) lifeBar.UpdateLife(life);
 
-        Vector3 knockback = new Vector3(
-            Mathf.Sign(transform.position.x - transform.position.x) * 5f, // horizontal
-            6f, // vertical
-            0f // no necesitamos Z
-        );
+        Vector3 dir = (transform.position - damageSource).normalized;
+        Vector3 knockback = new Vector3(dir.x * 6f, 7f, 0f);        
         _rigidBody.linearVelocity = knockback;
 
         if (life <= 0)
@@ -720,32 +727,54 @@ public class Player : MonoBehaviour
         fadeCanvas.alpha = targetAlpha;
     }
 
-    public void PerformMelee()
-    {
-        StartCoroutine(MeleeCoroutine());
-    }
-
     private IEnumerator MeleeCoroutine()
     {
-        // Activamos la animación de melee
+        isAttacking = true;
+
+        // BLOQUEAMOS MOVIMIENTO
+        playerInput.actions["Movement"].Disable();
+
         _animator.SetBool("isMeele", true);
-        // Calculamos el origen y aplicamos daño
-        Vector3 origin = transform.position + new Vector3(facingDirection * meleeRange, meleeYOffset, 0f);
+
+        yield return new WaitForSeconds(meleeAnticipation);
+
+        Vector3 origin = transform.position 
+            + new Vector3(facingDirection * meleeRange, meleeYOffset, 0f);
+
         Collider[] hits = Physics.OverlapSphere(origin, meleeRadius, enemyLayer);
+
+        bool hitSomething = false;
+
         foreach (var hit in hits)
         {
             EnemyController enemy = hit.GetComponentInParent<EnemyController>();
             if (enemy != null)
             {
                 enemy.TakeDamage(meleeDamage);
+                hitSomething = true;
             }
         }
 
-        // Esperamos la duración de la animación antes de resetear el bool
-        yield return new WaitForSeconds(meleeCooldown); // o la duración real de la animación
+        // HITSTOP SOLO SI CONECTAS
+        if (hitSomething)
+        {
+            StartCoroutine(HitStop(hitStopTime));
+        }
 
-        // Desactivamos la animación
+        yield return new WaitForSeconds(meleeRecovery);
+
         _animator.SetBool("isMeele", false);
+
+        // DESBLOQUEAMOS MOVIMIENTO
+        playerInput.actions["Movement"].Enable();
+        isAttacking = false;
+    }
+
+    private IEnumerator HitStop(float duration)
+    {
+        Time.timeScale = 0f;
+        yield return new WaitForSecondsRealtime(duration);
+        Time.timeScale = 1f;
     }
 
     private IEnumerator RespawnDelay()

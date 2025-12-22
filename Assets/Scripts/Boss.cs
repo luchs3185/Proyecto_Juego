@@ -185,7 +185,7 @@ public class Boss : MonoBehaviour
         if (player != null && Time.time - lastAttackTime >= attackCooldown)
         {
             lastAttackTime = Time.time;
-            player.TakeDamage(damage);
+            player.TakeDamage(damage, transform.position);
         }
     }
 
@@ -225,7 +225,7 @@ public class Boss : MonoBehaviour
                 if (playerHealth != null)
                 {
                     Debug.Log("Player damaged");
-                    playerHealth.TakeDamage(damage);
+                    playerHealth.TakeDamage(damage, transform.position);
                 }
             }
         }
