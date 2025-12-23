@@ -30,8 +30,8 @@ public class EnemyController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        
-        rb.isKinematic = true; 
+
+        rb.isKinematic = true;
         rb.constraints = RigidbodyConstraints.FreezeRotation;
 
         if (walkableSpace != null)
@@ -54,6 +54,14 @@ public class EnemyController : MonoBehaviour
         else
         {
             movement = new Vector3(patrolDirection, 0, 0);
+        }
+        if (movement.x > 0.1f)
+        {
+            _spriteRenderer.flipX = true; 
+        }
+        else if (movement.x < -0.1f)
+        {
+            _spriteRenderer.flipX = false;
         }
 
         Vector3 nextPosition = rb.position + movement * speed * Time.fixedDeltaTime;
@@ -93,7 +101,7 @@ public class EnemyController : MonoBehaviour
         if (p != null && Time.time - lastAttackTime >= attackCooldown)
         {
             lastAttackTime = Time.time;
-            p.TakeDamage(1, transform.position);   
+            p.TakeDamage(1, transform.position);
         }
     }
 
