@@ -77,7 +77,7 @@ public class Player : MonoBehaviour
     [Header("Melee")]
     public float meleeRange = 2f;
     public float meleeRadius = 2f;
-    public float meleeYOffset = 0.2f;
+    public float meleeYOffset = 0.5f;
     public int meleeDamage = 1;
     public float meleeCooldown = 0.4f;
     private float lastMeleeTime = -10f;
@@ -750,7 +750,7 @@ public class Player : MonoBehaviour
             EnemyController enemy = hit.GetComponentInParent<EnemyController>();
             if (enemy != null)
             {
-                enemy.TakeDamage(meleeDamage);
+                enemy.TakeDamage(meleeDamage, transform.position);
                 hitSomething = true;
             }
         }
@@ -782,5 +782,16 @@ public class Player : MonoBehaviour
         playerInput.actions["Movement"].Disable();
         yield return new WaitForSeconds(0.2f);
         playerInput.actions["Movement"].Enable();
+    }
+
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+
+        Vector3 origin = transform.position +
+            new Vector3(facingDirection * meleeRange, meleeYOffset, 0f);
+
+        Gizmos.DrawWireSphere(origin, meleeRadius);
     }
 }

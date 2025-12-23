@@ -8,7 +8,7 @@ public class EnemyController : MonoBehaviour
     public Transform player;
     public float detectionRadius = 10.0f;
     public float speed = 3.0f;
-    public int health = 1;
+    public int health = 2;
 
     private Rigidbody rb;
     private Vector3 movement;
@@ -79,19 +79,23 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(int amount, Vector3 damageSource)
     {
         if (dead) return;
+
         health -= amount;
+
+        Vector3 dir = (transform.position - damageSource).normalized;
+        rb.isKinematic = false;
+        rb.AddForce(new Vector3(dir.x * 4f, 2f, 0), ForceMode.Impulse);
+        StartCoroutine(RecoverKinematic());
+
         if (health <= 0)
-        {
             StartCoroutine(DieByDamage());
-        }
         else
-        {
             StartCoroutine(HitFlash());
-        }
     }
+
 
     void OnCollisionStay(Collision collision)
     {
@@ -105,15 +109,12 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    IEnumerator HitFlash()
+   IEnumerator HitFlash()
     {
-        if (_spriteRenderer != null)
-        {
-            Color originalColor = _spriteRenderer.color;
-            _spriteRenderer.color = Color.red;
-            yield return new WaitForSeconds(0.15f);
-            _spriteRenderer.color = originalColor;
-        }
+        Color original = _spriteRenderer.color;
+        _spriteRenderer.color = Color.white; // mejor que rojo
+        yield return new WaitForSeconds(0.06f);
+        _spriteRenderer.color = original;
     }
 
     IEnumerator DieByDamage()
@@ -136,5 +137,12 @@ public class EnemyController : MonoBehaviour
 
         yield return new WaitForSeconds(0.12f);
         Destroy(gameObject);
+    }
+
+    IEnumerator RecoverKinematic()
+    {
+        yield return new WaitForSeconds(0.12f);
+        rb.linearVelocity = Vector3.zero;
+        rb.isKinematic = true;
     }
 }
