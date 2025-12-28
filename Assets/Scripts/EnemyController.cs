@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-
     public Transform player;
     public float detectionRadius = 10.0f;
     public float speed = 3.0f;
@@ -18,7 +17,11 @@ public class EnemyController : MonoBehaviour
     public float attackCooldown = 1f;
     private float lastAttackTime = 0f;
 
+    public GameObject walkableSpace;
+    private Collider walkableCollider;
+
     private SpriteRenderer _spriteRenderer;
+    private int patrolDirection = 1;
 
     void Start()
     {
@@ -26,14 +29,21 @@ public class EnemyController : MonoBehaviour
         col = GetComponent<Collider>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
 
+        rb.isKinematic = true;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
+
+        if (walkableSpace != null)
+        {
+            walkableCollider = walkableSpace.GetComponent<Collider>();
+        }
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (dead || player == null) return;
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        
+
         if (distanceToPlayer <= detectionRadius)
         {
             Vector3 direction = (player.position - transform.position).normalized;
@@ -41,10 +51,30 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            movement = Vector3.zero;
+            movement = new Vector3(patrolDirection, 0, 0);
+        }
+        if (movement.x > 0.1f)
+        {
+            _spriteRenderer.flipX = true; 
+        }
+        else if (movement.x < -0.1f)
+        {
+            _spriteRenderer.flipX = false;
         }
 
-        rb.MovePosition(rb.position + movement * speed * Time.deltaTime);
+        Vector3 nextPosition = rb.position + movement * speed * Time.fixedDeltaTime;
+
+        if (walkableCollider != null)
+        {
+            if (walkableCollider.bounds.Contains(nextPosition))
+            {
+                rb.MovePosition(nextPosition);
+            }
+            else if (distanceToPlayer > detectionRadius)
+            {
+                patrolDirection *= -1;
+            }
+        }
     }
 
     public void TakeDamage(int amount)
@@ -64,12 +94,12 @@ public class EnemyController : MonoBehaviour
     void OnCollisionStay(Collision collision)
     {
         if (dead) return;
-    
-        Player player = collision.gameObject.GetComponentInParent<Player>();
-        if (player != null && Time.time - lastAttackTime >= attackCooldown)
+
+        Player p = collision.gameObject.GetComponentInParent<Player>();
+        if (p != null && Time.time - lastAttackTime >= attackCooldown)
         {
             lastAttackTime = Time.time;
-            player.TakeDamage(damage);
+            p.TakeDamage(1, transform.position);
         }
     }
 
@@ -103,8 +133,6 @@ public class EnemyController : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.12f);
-
         Destroy(gameObject);
     }
-
 }

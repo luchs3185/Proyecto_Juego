@@ -29,7 +29,7 @@ public class DigObj : MonoBehaviour
                 AudioSource.PlayClipAtPoint(pickupSound, transform.position);*/
 
             //Destruimos el objeto
-            Destroy(gameObject, destroyDelay);
+            //Destroy(gameObject, destroyDelay);
         }
     }
 }
