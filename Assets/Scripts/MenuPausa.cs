@@ -7,6 +7,7 @@ public class MenuPausa : MonoBehaviour
 {
     [SerializeField] private GameObject botonPausa;
     [SerializeField] private GameObject menuPausa;
+    public Player player;
 
     [Header("UI Controles")]
     [SerializeField] private GameObject menuControles;
@@ -29,6 +30,12 @@ public class MenuPausa : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void ToggleEasyMode()
+    {
+
+     player.easyMode=!player.easyMode;   
     }
 
     public void Cerrar()

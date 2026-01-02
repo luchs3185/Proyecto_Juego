@@ -15,6 +15,8 @@ public class Player : MonoBehaviour
     public float moveSpeed = 10;
     [Range(10, 100)]
 
+    public bool easyMode = false;
+
     [Header("Salto")]
     public float jumpForce = 70;
     public int maxJumps = 1;
@@ -84,7 +86,7 @@ public class Player : MonoBehaviour
     public LayerMask enemyLayer;
     public bool isMeele = false;
 
-    [Header("Melee avanzado")]  
+    [Header("Melee avanzado")]
     public float meleeAnticipation = 0.08f;
     public float meleeActiveTime = 0.05f;
     public float meleeRecovery = 0.12f;
@@ -164,7 +166,7 @@ public class Player : MonoBehaviour
         }
 
         // Melee attack
-        if (playerInput.actions["Attack"].triggered 
+        if (playerInput.actions["Attack"].triggered
             && Time.time - lastMeleeTime >= meleeCooldown
             && !isDashing
             && !isAttacking)
@@ -360,9 +362,9 @@ public class Player : MonoBehaviour
     //EXCAVAR
     public void Dig()
     {
-        if (!isDigging )
+        if (!isDigging)
         {
-            if (IsDiggableAboveBox() || IsDiggableBelowBox()&& inGround || IsDiggableLeft() || IsDiggableRight())
+            if (IsDiggableAboveBox() || IsDiggableBelowBox() && inGround || IsDiggableLeft() || IsDiggableRight())
                 StartDig();
             else
                 return;
@@ -586,7 +588,15 @@ public class Player : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            if (easyMode)
+            {
+                life = maxLife;
+                if (lifeBar != null) lifeBar.UpdateLife(life);
+                RespawnAtClosest();
+                StartCoroutine(InvulnerabilityCooldown());
+            }
+            else
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 
@@ -601,12 +611,20 @@ public class Player : MonoBehaviour
         if (lifeBar != null) lifeBar.UpdateLife(life);
 
         Vector3 dir = (transform.position - damageSource).normalized;
-        Vector3 knockback = new Vector3(dir.x * 6f, 7f, 0f);        
+        Vector3 knockback = new Vector3(dir.x * 6f, 7f, 0f);
         _rigidBody.linearVelocity = knockback;
 
         if (life <= 0)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            if (easyMode)
+            {
+                life = maxLife;
+                if (lifeBar != null) lifeBar.UpdateLife(life);
+                RespawnAtClosest();
+                StartCoroutine(InvulnerabilityCooldown());
+            }
+            else
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         else
         {
@@ -738,7 +756,7 @@ public class Player : MonoBehaviour
 
         yield return new WaitForSeconds(meleeAnticipation);
 
-        Vector3 origin = transform.position 
+        Vector3 origin = transform.position
             + new Vector3(facingDirection * meleeRange, meleeYOffset, 0f);
 
         Collider[] hits = Physics.OverlapSphere(origin, meleeRadius, enemyLayer);
