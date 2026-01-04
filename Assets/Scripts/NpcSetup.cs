@@ -13,8 +13,10 @@ public class NPCSetup : MonoBehaviour
         {
             if (gameObject.name == "Rat_DIalogue")
                 player.dashobj = true;
-            else if (gameObject.name == "Crow")
+            else if (gameObject.name == "Crow"){
                 player.maxJumps = 2;
+                player.jumpsRemaining = 2;
+            }
             else if (gameObject.name == "Topo")
                 player.digobj = true;
         };

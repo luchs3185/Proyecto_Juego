@@ -391,6 +391,14 @@ public class Player : MonoBehaviour
         transform.position += new Vector3(digDirection.x * undergroundOffset, digDirection.y * undergroundOffset, 0);
 
         _animator.SetBool("isDigging", true);
+        if (digDirection.y != 0)
+        {
+            _animator.SetInteger("digDirection", 1); // Vertical
+        }
+        else
+        {
+            _animator.SetInteger("digDirection", 2); // Horizontal
+        }
 
         playerInput.actions["Movement"].Disable();
     }
@@ -404,6 +412,7 @@ public class Player : MonoBehaviour
         IgnoreTagCollisions(false);
         _rigidBody.useGravity = true;
         _animator.SetBool("isDigging", false);
+        _animator.SetInteger("digDirection", 0);
         playerInput.actions["Movement"].Enable();
 
     }
