@@ -93,7 +93,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    void OnCollisionStay(Collision collision)
+    void OnCollisionStay(Collision collision)   
     {
         if (dead) return;
 
@@ -124,14 +124,20 @@ public class EnemyController : MonoBehaviour
             col.enabled = false;
 
         speed = 0f;
-        rb.isKinematic = true;
 
         if (_animator != null)
         {
             _animator.SetTrigger("hit");
         }
 
-        yield return new WaitForSeconds(0.5f); // Esperar a que se vea la animación
+          yield return new WaitUntil(() =>
+        _animator.GetCurrentAnimatorStateInfo(0).IsName("hit")
+        );
+
+        // Esperar a que termine la animación hit
+        yield return new WaitUntil(() =>
+            _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f
+        );
         Destroy(gameObject);
     }
 }

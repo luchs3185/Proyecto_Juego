@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
     public static bool inGround;
     public static bool isDigging = false;
     private float moveInput;
-    public float stopDelay = 0.2f;
+    public float stopDelay = 0.1f;
     private float mayJump = 0f;       // Tiempo que aún puedes saltar después de salir del suelo
     public float coyoteTime = 0.5f;  // Duración de coyote time
     private float jumpBufferTimer = 0f;       // Temporizador del buffer de salto
@@ -78,8 +78,8 @@ public class Player : MonoBehaviour
     public float fadeTime = 0.3f;    // puración del fundido en segundos
 
     [Header("Melee")]
-    public float meleeRange = 2f;
-    public float meleeRadius = 2f;
+    public float meleeRange = 1f;
+    public float meleeRadius = 1f;
     public float meleeYOffset = 0.2f;
     public int meleeDamage = 1;
     public float meleeCooldown = 0.4f;
