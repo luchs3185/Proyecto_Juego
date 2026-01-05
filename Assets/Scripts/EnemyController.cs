@@ -129,9 +129,9 @@ public class EnemyController : MonoBehaviour
         if (_animator != null)
         {
             _animator.SetTrigger("hit");
-
         }
 
+        yield return new WaitForSeconds(0.5f); // Esperar a que se vea la animación
         Destroy(gameObject);
     }
 }
