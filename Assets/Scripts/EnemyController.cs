@@ -23,6 +23,7 @@ public class EnemyController : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
     private int patrolDirection = 1;
 
+    private Animator _animator;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -31,6 +32,7 @@ public class EnemyController : MonoBehaviour
 
         rb.isKinematic = true;
         rb.constraints = RigidbodyConstraints.FreezeRotation;
+        _animator = GetComponent<Animator>();
 
         if (walkableSpace != null)
         {
@@ -117,22 +119,19 @@ public class EnemyController : MonoBehaviour
     IEnumerator DieByDamage()
     {
         dead = true;
-        if (col != null) col.enabled = false;
+        _animator.SetBool("Dead", true);
+        if (col != null)
+            col.enabled = false;
+
         speed = 0f;
+        rb.isKinematic = true;
 
-        Vector3 originalScale = transform.localScale;
-        Vector3 targetScale = new Vector3(originalScale.x, originalScale.y * 0.2f, originalScale.z);
-        float duration = 0.12f;
-        float t = 0f;
-
-        while (t < duration)
+        if (_animator != null)
         {
-            t += Time.deltaTime;
-            transform.localScale = Vector3.Lerp(originalScale, targetScale, t / duration);
-            yield return null;
+            _animator.SetTrigger("hit");
+
         }
 
-        yield return new WaitForSeconds(0.12f);
         Destroy(gameObject);
     }
 }
