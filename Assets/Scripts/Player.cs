@@ -583,7 +583,14 @@ public class Player : MonoBehaviour
 
     private void TakeDamageWater()
     {
-        if (iframe || invencible)
+        // Si es invencible, NO pierde vida, pero SÍ debe respawnear si cae al agua
+        if (invencible)
+        {
+            RespawnAtClosest();
+            return;
+        }
+
+        if (iframe)
         {
             return;
         }
