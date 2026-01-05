@@ -55,4 +55,19 @@ public class MenuPausa : MonoBehaviour
         menuControles.SetActive(false); //el menu de controles desaparece
         menuPausa.SetActive(true); //el menu de pausa aparece
     }
+
+    [Header("UI Accesibilidad")]
+    [SerializeField] private GameObject menuAccesibilidad;
+
+    public void AbrirAccesibilidad()
+    {
+        menuPausa.SetActive(false); //el menu de pausa desaparece
+        menuAccesibilidad.SetActive(true); //el menu de accesibilidad aparece
+    }
+
+    public void CerrarAccesibilidad()
+    {
+        menuAccesibilidad.SetActive(false); //el menu de accesibilidad desaparece
+        menuPausa.SetActive(true); //el menu de pausa aparece
+    }
 }
