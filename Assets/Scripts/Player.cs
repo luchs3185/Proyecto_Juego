@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     [Range(10, 100)]
 
     public bool easyMode = false;
+    public bool invencible = false;
 
     [Header("Salto")]
     public float jumpForce = 70;
@@ -582,7 +583,7 @@ public class Player : MonoBehaviour
 
     private void TakeDamageWater()
     {
-        if (iframe)
+        if (iframe || invencible)
         {
             return;
         }
@@ -612,7 +613,7 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(int amount, Vector3 damageSource)
     {
-        if (iframe) return;
+        if (iframe || invencible) return;
         iframe = true;
 
         life -= amount;
