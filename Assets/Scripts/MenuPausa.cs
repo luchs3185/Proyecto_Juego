@@ -58,16 +58,42 @@ public class MenuPausa : MonoBehaviour
 
     [Header("UI Accesibilidad")]
     [SerializeField] private GameObject menuAccesibilidad;
+    [SerializeField] private UnityEngine.UI.Image botonInvencibilidadImg;
+    [SerializeField] private UnityEngine.UI.Image botonDaltonismoImg;
 
     public void AbrirAccesibilidad()
     {
         menuPausa.SetActive(false); //el menu de pausa desaparece
         menuAccesibilidad.SetActive(true); //el menu de accesibilidad aparece
+        UpdateAccessibilityUI();
     }
 
     public void CerrarAccesibilidad()
     {
         menuAccesibilidad.SetActive(false); //el menu de accesibilidad desaparece
         menuPausa.SetActive(true); //el menu de pausa aparece
+    }
+
+    public void ToggleInvencibilidad()
+    {
+        player.invencible = !player.invencible;
+        UpdateAccessibilityUI();
+    }
+
+    public void ToggleDaltonismo()
+    {
+        // Aquí iría la lógica futura de daltonismo
+        // player.daltonismo = !player.daltonismo;
+        UpdateAccessibilityUI();
+    }
+
+    private void UpdateAccessibilityUI()
+    {
+        // Cambiar color para indicar ON/OFF (Blanco = OFF, Verde = ON)
+        if (botonInvencibilidadImg != null)
+            botonInvencibilidadImg.color = player.invencible ? Color.green : Color.white;
+            
+        // if (botonDaltonismoImg != null)
+        //    botonDaltonismoImg.color = player.daltonismo ? Color.green : Color.white; // Descomentar cuando exista
     }
 }
