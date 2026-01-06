@@ -287,7 +287,7 @@ public class Player : MonoBehaviour
             DoJump();
             jumpsRemaining = 0;
             jumpnum = 1;
-            Debug.Log("Salto simpple 1");
+            
             return;
         }
 
@@ -301,7 +301,7 @@ public class Player : MonoBehaviour
                 jumpnum = 1;
                 mayJump = 0f;
                 inGround = false;
-                Debug.Log("Salto doble 1");
+              
                 return;
             }
 
@@ -311,7 +311,7 @@ public class Player : MonoBehaviour
                 DoJump();
                 jumpsRemaining = 0;
                 jumpnum = 2;
-                Debug.Log("Salto doble");
+               
                 return;
             }
         }
