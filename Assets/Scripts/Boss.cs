@@ -116,30 +116,30 @@ public class Boss : MonoBehaviour
                     break;
                 }
         }
-
-
+        UpdateDirection();
     }
 
     private void MoveToPlayer()
     {
-        float directionX = player.position.x - transform.position.x;
-        float distance = Mathf.Abs(directionX);
+        float distance = Mathf.Abs(player.position.x - transform.position.x);
 
-        // Solo moverse si está fuera del rango de ataque
         if (distance > attackRange)
         {
-            float step = speed * Time.deltaTime;
-            Vector3 targetPos = new Vector3(player.position.x, transform.position.y, transform.position.z);
-
-            // Si la distancia al target es menor que step, mover solo lo necesario
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
+            animator.SetBool("isWalking", true);
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                new Vector3(player.position.x, transform.position.y, transform.position.z),
+                speed * Time.deltaTime
+            );
         }
         else
         {
-            // Ya dentro del rango
+            animator.SetBool("isWalking", false);
             state = State.Idle;
         }
     }
+
+
     void HandleFlip()
     {
         if (Time.time - lastFlipTime >= flipDelay)
@@ -267,4 +267,14 @@ public class Boss : MonoBehaviour
 
         Destroy(gameObject);
     }
+    void UpdateDirection()
+    {
+        float dx = player.position.x - transform.position.x;
+
+        if (dx > 0)
+            animator.SetInteger("direction", 1);
+        else
+            animator.SetInteger("direction", -1);
+    }
+
 }
