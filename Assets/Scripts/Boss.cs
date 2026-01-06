@@ -12,7 +12,7 @@ public class Boss : MonoBehaviour
     [Header("Combate")]
     public int damage = 1;
     public float attackRange = 5f;
-    public float attackCooldown = 1.2f;
+    public float attackCooldown = 2f;
     public Collider attackZone; // Asegúrate de que este collider cubra ambos lados o ten dos colliders
     
     // Referencias
@@ -28,13 +28,13 @@ public class Boss : MonoBehaviour
     private bool dead = false;
     private bool attacking = false;
     private bool isTurning = false;
-    private float lastAttackTime = 0f;
+    private float nextAttackTime = 0f;
     private int currentDirection = 1; // 1 Derecha, -1 Izquierda
 
     // NUEVO: objeto que se activará al morir
     public GameObject objectToActivateOnDeath;
 
-   void Start()
+  void Start()
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
@@ -45,7 +45,6 @@ public class Boss : MonoBehaviour
     {
         if (dead || player == null) return;
 
-        // Si está girando o ya está en medio de una animación de ataque, no hace nada nuevo
         if (isTurning || attacking) 
         {
             rb.linearVelocity = Vector3.zero; 
@@ -59,20 +58,16 @@ public class Boss : MonoBehaviour
         float distanceY = Mathf.Abs(transform.position.y - player.position.y);
         float totalDistance = Vector3.Distance(transform.position, player.position);
 
-        // CONDICIÓN DE ATAQUE: Solo si está en rango Y ha pasado el cooldown
+        // LÓGICA DE ATAQUE CORREGIDA
         if (distanceX <= attackRange && distanceY < 3.0f)
         {
-            if (Time.time - lastAttackTime >= attackCooldown)
+            animator.SetBool("isWalking", false);
+            rb.linearVelocity = Vector3.zero;
+            if (Time.time >= nextAttackTime)
             {
                 StartAttack();
             }
-            else
-            {
-                // Si está en rango pero el cooldown no ha pasado, se queda quieto (Idle)
-                animator.SetBool("isWalking", false);
-            }
         }
-        // MOVIMIENTO: Solo si NO está en rango de ataque pero sí en rango de detección
         else if (totalDistance <= detectionRadius)
         {
             MoveToPlayer();
@@ -82,51 +77,96 @@ public class Boss : MonoBehaviour
             animator.SetBool("isWalking", false);
         }
     }
-
-    private void StartAttack()
+    
+   private void StartAttack()
     {
+        if (attacking) return; // Doble seguridad
+
         attacking = true;
-        lastAttackTime = Time.time;
-        animator.SetBool("isWalking", false); // Asegurar que deja de caminar
+        rb.linearVelocity = Vector3.zero;
+        animator.SetBool("isWalking", false);
+
+        // Limpiamos el trigger antes de activarlo para que no se acumule
+        animator.ResetTrigger("attack"); 
         animator.SetTrigger("attack");
         
-        // El tiempo de EndAttack debe ser igual o un poco menor a tu clip de animación
-        Invoke("EndAttack", 0.8f); 
+
+        StartCoroutine(SequenceAttack());
     }
 
-    public void EndAttack()
+    IEnumerator SequenceAttack()
     {
+        // 1. Tiempo de espera: Debe ser igual a la duración de tu clip de ataque
+        // Mira en Unity cuánto dura tu animación (ej. 0.8s) y ponlo aquí.
+        yield return new WaitForSeconds(0.8f); 
+
+        // 2. IMPORTANTE: Forzamos al Animator a volver a un estado neutro
+        animator.ResetTrigger("attack");
+
+        // 3. Pequeña pausa de seguridad para que los logs no se saturen
+        yield return new WaitForSeconds(0.2f); 
+
         attacking = false;
     }
-
-    // ESTA ES LA FUNCIÓN QUE DEBE ESTAR EN EL ANIMATION EVENT
     public void AttackHit()
     {
-        if (attackZone == null) return;
+         Debug.Log("Procesando hit");
+        // 1. Verificación de seguridad
+        if (attackZone == null) 
+        {
+            Debug.LogError("¡No has asignado el objeto AttackZone en el Inspector!");
+            return;
+        }
 
-        // Usamos Bounds para crear la caja de detección basada en el collider verde
+        // 2. Obtenemos los datos exactos del Collider del objeto Attack Zone
+        // Usamos el centro real en el mundo y sus dimensiones (extents)
         Vector3 center = attackZone.bounds.center;
         Vector3 halfExtents = attackZone.bounds.extents;
+        Quaternion rotation = attackZone.transform.rotation;
 
-        // Detectamos todo en el área
-        Collider[] hits = Physics.OverlapBox(center, halfExtents, Quaternion.identity);
+        // 3. Realizamos la detección física en esa caja exacta
+        Collider[] hits = Physics.OverlapBox(center, halfExtents, rotation);
 
+        bool hitDetected = false;
         foreach (var hit in hits)
         {
-            // IMPORTANTE: Verifica que tu jugador tenga el TAG "Player"
+            // Ignoramos al propio Boss si tiene el tag de Player por error (poco común)
+            if (hit.transform == transform) continue;
+
             if (hit.CompareTag("Player"))
             {
-                // Buscamos el script Player en el objeto o en sus padres
-                var p = hit.GetComponentInParent<Player>();
+                // Buscamos el script Player en el objeto o sus padres
+                Player p = hit.GetComponent<Player>() ?? hit.GetComponentInParent<Player>();
+
                 if (p != null)
                 {
                     p.TakeDamage(damage, transform.position);
-                    Debug.Log("¡Golpeado!");
+                    Debug.Log("<color=green>¡Impacto detectado mediante Attack Zone!</color>");
+                    hitDetected = true;
                 }
             }
         }
+
+        if (!hitDetected) 
+        {
+            Debug.Log("<color=yellow>El ataque no alcanzó a nadie en el Attack Zone.</color>");
+        }
     }
 
+    // Dibuja el área en el editor para que puedas ajustarla visualmente
+    private void OnDrawGizmosSelected()
+    {
+        if (attackZone != null)
+        {
+            Gizmos.color = Color.red;
+            // Obtenemos la matriz de transformación del objeto para dibujar el cubo rotado
+            Matrix4x4 cubeMatrix = Matrix4x4.TRS(attackZone.bounds.center, attackZone.transform.rotation, Vector3.one);
+            Gizmos.matrix = cubeMatrix;
+            
+            // Dibujamos el cubo con el tamaño del collider
+            Gizmos.DrawWireCube(Vector3.zero, attackZone.bounds.size);
+        }
+    }
     private void CheckForFlip()
     {
         float deltaX = player.position.x - transform.position.x;
