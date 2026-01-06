@@ -3,190 +3,165 @@ using UnityEngine;
 
 public class Boss : MonoBehaviour
 {
+    [Header("Configuración")]
     public Transform player;
     public float detectionRadius = 10.0f;
-    public float speed = 3.0f;
+    public float speed = 4.0f;
     public int health = 1;
 
-    private Rigidbody rb;
-    private Vector3 movement;
-    private Collider col;
-    private bool dead = false;
-    private enum State { Idle, Move, Attack };
-    private State state;
-
-    public float attackCooldown = 1f;
-    private bool inRange = false;
-    // Ver si esta rotatndo
-    private bool flipping = false;
-
-    [Header("Ataque")]
+    [Header("Combate")]
     public int damage = 1;
     public float attackRange = 5f;
-    private float lastAttackTime = 0f;
-    private float lastFlipTime = 0f;
-    private bool attacking = false;
-    private float flipDelay;
-    private float dir = 1;
-    public Collider attackZone;
+    public float attackCooldown = 1.2f;
+    public Collider attackZone; // Asegúrate de que este collider cubra ambos lados o ten dos colliders
+    
+    // Referencias
+    private Rigidbody rb;
     private Animator animator;
     private SpriteRenderer _spriteRenderer;
+
+    [Header("Animación de Giro")]
+    // AJUSTA ESTO: ¿Cuántos segundos dura tu animación de giro exactos?
+    public float turnDuration = 0.55f;
+
+    // Estado interno
+    private bool dead = false;
+    private bool attacking = false;
+    private bool isTurning = false;
+    private float lastAttackTime = 0f;
+    private int currentDirection = 1; // 1 Derecha, -1 Izquierda
 
     // NUEVO: objeto que se activará al morir
     public GameObject objectToActivateOnDeath;
 
-    void Start()
+   void Start()
     {
         rb = GetComponent<Rigidbody>();
-        col = GetComponent<Collider>();
         animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        dir = rb.transform.localScale.x > 0 ? -1 : 1;
     }
-
 
     void FixedUpdate()
     {
         if (dead || player == null) return;
 
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        if (distanceToPlayer <= detectionRadius)
+        // Si está girando o ya está en medio de una animación de ataque, no hace nada nuevo
+        if (isTurning || attacking) 
         {
-            inRange = true;
-        }
-        else
-        {
-            inRange = false;
+            rb.linearVelocity = Vector3.zero; 
             return;
         }
 
-        if (flipping)
+        CheckForFlip();
+        if (isTurning) return;
+
+        float distanceX = Mathf.Abs(transform.position.x - player.position.x);
+        float distanceY = Mathf.Abs(transform.position.y - player.position.y);
+        float totalDistance = Vector3.Distance(transform.position, player.position);
+
+        // CONDICIÓN DE ATAQUE: Solo si está en rango Y ha pasado el cooldown
+        if (distanceX <= attackRange && distanceY < 3.0f)
         {
-            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            if (stateInfo.IsName("change_dir") && stateInfo.normalizedTime >= 1f)
+            if (Time.time - lastAttackTime >= attackCooldown)
             {
-                lastFlipTime = Time.time;
-                animator.SetBool("rotate", false);
-                flipping = false;
-            }
-            return;
-        }
-        else if (attacking)
-        {
-            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            if (stateInfo.IsName("attack") && stateInfo.normalizedTime >= 1f)
-            {
-                attacking = false;
-                animator.SetBool("attack", false);
-                state = State.Idle;
+                StartAttack();
             }
             else
             {
-                state = State.Attack;
+                // Si está en rango pero el cooldown no ha pasado, se queda quieto (Idle)
+                animator.SetBool("isWalking", false);
             }
         }
-
-        else if (distanceToPlayer > attackRange + 0.2)
+        // MOVIMIENTO: Solo si NO está en rango de ataque pero sí en rango de detección
+        else if (totalDistance <= detectionRadius)
         {
-            state = State.Move;
-        }
-        else
-        {
-            if (state != State.Attack)
-            {
-                state = (Random.Range(0, 4) == 0) ? State.Attack : State.Idle;
-            }
-        }
-        HandleFlip();
-        switch (state)
-        {
-            case State.Idle:
-                {
-                    break;
-                }
-            case State.Attack:
-                {
-                    if (!attacking)
-                        StartAttack();
-                    break;
-                }
-            case State.Move:
-                {
-                    MoveToPlayer();
-                    break;
-                }
-        }
-        UpdateDirection();
-    }
-
-    private void MoveToPlayer()
-    {
-        float distance = Mathf.Abs(player.position.x - transform.position.x);
-
-        if (distance > attackRange)
-        {
-            animator.SetBool("isWalking", true);
-            transform.position = Vector3.MoveTowards(
-                transform.position,
-                new Vector3(player.position.x, transform.position.y, transform.position.z),
-                speed * Time.deltaTime
-            );
+            MoveToPlayer();
         }
         else
         {
             animator.SetBool("isWalking", false);
-            state = State.Idle;
         }
     }
 
-
-    void HandleFlip()
+    private void StartAttack()
     {
-        if (Time.time - lastFlipTime >= flipDelay)
-        {
+        attacking = true;
+        lastAttackTime = Time.time;
+        animator.SetBool("isWalking", false); // Asegurar que deja de caminar
+        animator.SetTrigger("attack");
+        
+        // El tiempo de EndAttack debe ser igual o un poco menor a tu clip de animación
+        Invoke("EndAttack", 0.8f); 
+    }
 
-            float direction = player.position.x - transform.position.x;
-            flipDelay = Random.Range(0.6f, 2.5f);
-            if ((direction > 0 && dir < 0) || (direction < 0 && dir > 0))
+    public void EndAttack()
+    {
+        attacking = false;
+    }
+
+    // ESTA ES LA FUNCIÓN QUE DEBE ESTAR EN EL ANIMATION EVENT
+    public void AttackHit()
+    {
+        if (attackZone == null) return;
+
+        // Usamos Bounds para crear la caja de detección basada en el collider verde
+        Vector3 center = attackZone.bounds.center;
+        Vector3 halfExtents = attackZone.bounds.extents;
+
+        // Detectamos todo en el área
+        Collider[] hits = Physics.OverlapBox(center, halfExtents, Quaternion.identity);
+
+        foreach (var hit in hits)
+        {
+            // IMPORTANTE: Verifica que tu jugador tenga el TAG "Player"
+            if (hit.CompareTag("Player"))
             {
-                flipping = true;
-                animator.SetTrigger("rotate");
+                // Buscamos el script Player en el objeto o en sus padres
+                var p = hit.GetComponentInParent<Player>();
+                if (p != null)
+                {
+                    p.TakeDamage(damage, transform.position);
+                    Debug.Log("¡Golpeado!");
+                }
             }
         }
     }
-    public void Flip()
-    {
-        dir = dir > 0 ? -1 : 1;
-        lastFlipTime = Time.time;
 
-        Vector3 scale = transform.localScale;
-        scale.x *= -1;
-        transform.localScale = scale;
-    }
-    public void TakeDamage(int amount)
+    private void CheckForFlip()
     {
-        if (dead) return;
-        health -= amount;
-        if (health <= 0)
+        float deltaX = player.position.x - transform.position.x;
+        if (Mathf.Abs(deltaX) > 0.3f)
         {
-            StartCoroutine(DieByDamage());
-        }
-        else
-        {
-            StartCoroutine(HitFlash());
+            int desiredDirection = deltaX > 0 ? 1 : -1;
+            if (desiredDirection != currentDirection)
+            {
+                StartCoroutine(PerformTurn(desiredDirection));
+            }
         }
     }
 
-    void OnCollisionStay(Collision collision)
+    IEnumerator PerformTurn(int newDir)
     {
-        if (dead) return;
+        isTurning = true;
+        animator.SetBool("isWalking", false);
+        animator.SetInteger("Direction", newDir);
+        yield return new WaitForSeconds(turnDuration);
+        currentDirection = newDir;
+        isTurning = false;
+    }
 
-        Player player = collision.gameObject.GetComponentInParent<Player>();
-        if (player != null && Time.time - lastAttackTime >= attackCooldown)
-        {
-            lastAttackTime = Time.time;
-            player.TakeDamage(damage, transform.position);
-        }
+    private void MoveToPlayer()
+    {
+        animator.SetBool("isWalking", true);
+        Vector3 targetPos = new Vector3(player.position.x, transform.position.y, transform.position.z);
+        rb.MovePosition(Vector3.MoveTowards(rb.position, targetPos, speed * Time.fixedDeltaTime));
+    }
+
+    public void TakeDamage(int dmg) 
+    {
+        health -= dmg;
+        StartCoroutine(HitFlash());
+        if (health <= 0) StartCoroutine(DieByDamage());
     }
 
     IEnumerator HitFlash()
@@ -200,52 +175,17 @@ public class Boss : MonoBehaviour
         }
     }
 
-    private void StartAttack()
-    {
-        animator.SetTrigger("attack");
-        state = State.Attack;
-        lastAttackTime = Time.time;
-        attacking = true;
-    }
-    public void Attack()
-    {
-        BoxCollider col = attackZone.GetComponent<BoxCollider>();
-        if (col == null) return;
-
-        Vector3 center = col.bounds.center;
-        Vector3 halfExtents = col.bounds.extents;
-        Collider[] hits = Physics.OverlapBox(center, halfExtents, Quaternion.identity, LayerMask.GetMask("Default"));
-
-
-        foreach (var hit in hits)
-        {
-            if (hit.CompareTag("Player")) 
-            {
-                Player playerHealth = hit.GetComponent<Player>();
-                if (playerHealth != null)
-                {
-                    Debug.Log("Player damaged");
-                    playerHealth.TakeDamage(damage, transform.position);
-                }
-            }
-        }
-    }
-    public void EndAttack()
-    {
-        attacking = false;
-        animator.SetBool("attack", false);
-        Debug.Log("end");
-    }
-
     IEnumerator DieByDamage()
     {
         dead = true;
-        if (col != null) col.enabled = false;
-        speed = 0f;
-
+        animator.SetBool("isWalking", false);
+        if (GetComponent<Collider>()) GetComponent<Collider>().enabled = false;
+        
+        // Efecto de aplastamiento
         Vector3 originalScale = transform.localScale;
         Vector3 targetScale = new Vector3(originalScale.x, originalScale.y * 0.2f, originalScale.z);
-        float duration = 0.12f;
+        
+        float duration = 0.5f;
         float t = 0f;
 
         while (t < duration)
@@ -255,26 +195,12 @@ public class Boss : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds(0.12f);
-
-        // NUEVO: activamos el objeto oculto
         if (objectToActivateOnDeath != null)
         {
             objectToActivateOnDeath.transform.position = transform.position;
-            objectToActivateOnDeath.transform.rotation = transform.rotation;
             objectToActivateOnDeath.SetActive(true);
         }
 
         Destroy(gameObject);
     }
-    void UpdateDirection()
-    {
-        float dx = player.position.x - transform.position.x;
-
-        if (dx > 0)
-            animator.SetInteger("direction", 1);
-        else
-            animator.SetInteger("direction", -1);
-    }
-
 }
