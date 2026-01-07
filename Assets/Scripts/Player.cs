@@ -17,6 +17,10 @@ public class Player : MonoBehaviour
 
     public bool easyMode = false;
     public bool invencible = false;
+    public AudioClip dashSound;
+    public AudioClip digSound;
+    public AudioClip walkSound;
+    public AudioClip jumpSound;
 
     [Header("Salto")]
     public float jumpForce = 70;
@@ -27,6 +31,7 @@ public class Player : MonoBehaviour
     private PlayerInput playerInput;
     private float direction;
     public static bool inGround;
+    private AudioSource audioSource;
     public static bool isDigging = false;
     private float moveInput;
     public float stopDelay = 0.1f;
@@ -113,6 +118,7 @@ public class Player : MonoBehaviour
         _spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         myColliders = GetComponentsInChildren<Collider>();
         jumpsRemaining = maxJumps;
+        audioSource=GetComponent<AudioSource>();
 
 
     }
@@ -308,6 +314,7 @@ public class Player : MonoBehaviour
             // Segundo salto EN AIRE
             if (jumpsRemaining == 1 && !inGround)
             {
+        audioSource.PlayOneShot(jumpSound);
                 DoJump();
                 jumpsRemaining = 0;
                 jumpnum = 2;
@@ -339,6 +346,7 @@ public class Player : MonoBehaviour
         float originalY = _rigidBody.linearVelocity.y;
         float elapsed = 0f;
         _animator.SetBool("isDashing", true);
+        audioSource.PlayOneShot(dashSound);
         while (elapsed < dashTime)
         {
             // Dash horizontal completamente plano
@@ -382,6 +390,7 @@ public class Player : MonoBehaviour
 
     private void StartDig()
     {
+        audioSource.PlayOneShot(digSound);
         isDigging = true;
         gameObject.layer = LayerMask.NameToLayer(undergroundLayer);
         _rigidBody.useGravity = false;
@@ -670,6 +679,8 @@ public class Player : MonoBehaviour
 
     private void RespawnAtClosest()
     {
+        MusicManager.Instance.PlayMusic();
+
         Transform respawn = GetClosestRespawnPoint();
 
         if (respawn != null)

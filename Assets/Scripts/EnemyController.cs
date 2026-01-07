@@ -24,11 +24,17 @@ public class EnemyController : MonoBehaviour
     private int patrolDirection = 1;
 
     private Animator _animator;
+    private AudioSource audioSource;
+    public AudioClip moveSound;   // sonido al moverse
+    public AudioClip deathSound;
+    private float lastMoveTime;
+    private float soundCooldown = 2.0f;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        audioSource = GetComponent<AudioSource>();
 
         rb.isKinematic = true;
         rb.constraints = RigidbodyConstraints.FreezeRotation;
@@ -57,7 +63,7 @@ public class EnemyController : MonoBehaviour
         }
         if (movement.x > 0.1f)
         {
-            _spriteRenderer.flipX = true; 
+            _spriteRenderer.flipX = true;
         }
         else if (movement.x < -0.1f)
         {
@@ -77,6 +83,14 @@ public class EnemyController : MonoBehaviour
                 patrolDirection *= -1;
             }
         }
+        if (Time.time - lastMoveTime >= soundCooldown)
+        {
+            if (!audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(moveSound,0.3f);
+                lastMoveTime = Time.time;
+            }
+        }
     }
 
     public void TakeDamage(int amount)
@@ -93,7 +107,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    void OnCollisionStay(Collision collision)   
+    void OnCollisionStay(Collision collision)
     {
         if (dead) return;
 
@@ -129,10 +143,12 @@ public class EnemyController : MonoBehaviour
         {
             _animator.SetTrigger("hit");
         }
+        audioSource.Stop();
+        audioSource.PlayOneShot(deathSound,0.4f);
 
-          yield return new WaitUntil(() =>
-        _animator.GetCurrentAnimatorStateInfo(0).IsName("hit")
-        );
+        yield return new WaitUntil(() =>
+      _animator.GetCurrentAnimatorStateInfo(0).IsName("hit")
+      );
 
         // Esperar a que termine la animación hit
         yield return new WaitUntil(() =>

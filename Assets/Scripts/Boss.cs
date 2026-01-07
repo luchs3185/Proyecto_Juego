@@ -8,17 +8,20 @@ public class Boss : MonoBehaviour
     public float detectionRadius = 10.0f;
     public float speed = 4.0f;
     public int health = 1;
+    public AudioClip angryCat;
+    public AudioClip deathCat;
 
     [Header("Combate")]
     public int damage = 1;
     public float attackRange = 5f;
     public float attackCooldown = 2f;
     public Collider attackZone; // Asegúrate de que este collider cubra ambos lados o ten dos colliders
-    
+
     // Referencias
     private Rigidbody rb;
     private Animator animator;
     private SpriteRenderer _spriteRenderer;
+    private AudioSource bossMusic;
 
     [Header("Animación de Giro")]
     // AJUSTA ESTO: ¿Cuántos segundos dura tu animación de giro exactos?
@@ -34,20 +37,21 @@ public class Boss : MonoBehaviour
     // NUEVO: objeto que se activará al morir
     public GameObject objectToActivateOnDeath;
 
-  void Start()
+    void Start()
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        bossMusic = GetComponent<AudioSource>();
     }
 
     void FixedUpdate()
     {
         if (dead || player == null) return;
 
-        if (isTurning || attacking) 
+        if (isTurning || attacking)
         {
-            rb.linearVelocity = Vector3.zero; 
+            rb.linearVelocity = Vector3.zero;
             return;
         }
 
@@ -65,20 +69,32 @@ public class Boss : MonoBehaviour
             rb.linearVelocity = Vector3.zero;
             if (Time.time >= nextAttackTime)
             {
+                bossMusic.PlayOneShot(angryCat);
                 StartAttack();
             }
         }
         else if (totalDistance <= detectionRadius)
         {
+            if (!bossMusic.isPlaying)
+            {
+                bossMusic.Play();
+                MusicManager.Instance.StopMusic();
+            }
             MoveToPlayer();
         }
         else
         {
+            if (bossMusic.isPlaying)
+            {
+                bossMusic.Stop();
+                MusicManager.Instance.PlayMusic();
+
+            }
             animator.SetBool("isWalking", false);
         }
     }
-    
-   private void StartAttack()
+
+    private void StartAttack()
     {
         if (attacking) return; // Doble seguridad
 
@@ -87,9 +103,9 @@ public class Boss : MonoBehaviour
         animator.SetBool("isWalking", false);
 
         // Limpiamos el trigger antes de activarlo para que no se acumule
-        animator.ResetTrigger("attack"); 
+        animator.ResetTrigger("attack");
         animator.SetTrigger("attack");
-        
+
 
         StartCoroutine(SequenceAttack());
     }
@@ -98,21 +114,21 @@ public class Boss : MonoBehaviour
     {
         // 1. Tiempo de espera: Debe ser igual a la duración de tu clip de ataque
         // Mira en Unity cuánto dura tu animación (ej. 0.8s) y ponlo aquí.
-        yield return new WaitForSeconds(0.8f); 
+        yield return new WaitForSeconds(0.8f);
 
         // 2. IMPORTANTE: Forzamos al Animator a volver a un estado neutro
         animator.ResetTrigger("attack");
 
         // 3. Pequeña pausa de seguridad para que los logs no se saturen
-        yield return new WaitForSeconds(0.2f); 
+        yield return new WaitForSeconds(0.2f);
 
         attacking = false;
     }
     public void AttackHit()
     {
-         Debug.Log("Procesando hit");
+        Debug.Log("Procesando hit");
         // 1. Verificación de seguridad
-        if (attackZone == null) 
+        if (attackZone == null)
         {
             Debug.LogError("¡No has asignado el objeto AttackZone en el Inspector!");
             return;
@@ -147,7 +163,7 @@ public class Boss : MonoBehaviour
             }
         }
 
-        if (!hitDetected) 
+        if (!hitDetected)
         {
             Debug.Log("<color=yellow>El ataque no alcanzó a nadie en el Attack Zone.</color>");
         }
@@ -162,7 +178,7 @@ public class Boss : MonoBehaviour
             // Obtenemos la matriz de transformación del objeto para dibujar el cubo rotado
             Matrix4x4 cubeMatrix = Matrix4x4.TRS(attackZone.bounds.center, attackZone.transform.rotation, Vector3.one);
             Gizmos.matrix = cubeMatrix;
-            
+
             // Dibujamos el cubo con el tamaño del collider
             Gizmos.DrawWireCube(Vector3.zero, attackZone.bounds.size);
         }
@@ -197,7 +213,7 @@ public class Boss : MonoBehaviour
         rb.MovePosition(Vector3.MoveTowards(rb.position, targetPos, speed * Time.fixedDeltaTime));
     }
 
-    public void TakeDamage(int dmg) 
+    public void TakeDamage(int dmg)
     {
         health -= dmg;
         StartCoroutine(HitFlash());
@@ -217,14 +233,16 @@ public class Boss : MonoBehaviour
 
     IEnumerator DieByDamage()
     {
+        bossMusic.PlayOneShot(deathCat);
+        MusicManager.Instance.PlayMusic();
         dead = true;
         animator.SetBool("isWalking", false);
         if (GetComponent<Collider>()) GetComponent<Collider>().enabled = false;
-        
+
         // Efecto de aplastamiento
         Vector3 originalScale = transform.localScale;
         Vector3 targetScale = new Vector3(originalScale.x, originalScale.y * 0.2f, originalScale.z);
-        
+
         float duration = 0.5f;
         float t = 0f;
 
@@ -240,6 +258,8 @@ public class Boss : MonoBehaviour
             objectToActivateOnDeath.transform.position = transform.position;
             objectToActivateOnDeath.SetActive(true);
         }
+
+        bossMusic.Stop();
 
         Destroy(gameObject);
     }
