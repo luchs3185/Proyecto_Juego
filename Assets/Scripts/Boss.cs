@@ -15,8 +15,10 @@ public class Boss : MonoBehaviour
     public int damage = 1;
     public float attackRange = 5f;
     public float attackCooldown = 2f;
+    public float attackCooldown_contact = 1f;
     public Collider attackZone; // Asegúrate de que este collider cubra ambos lados o ten dos colliders
-
+    public bool iframe;
+    private float lastAttackTime = 0f;
     // Referencias
     private Rigidbody rb;
     private Animator animator;
@@ -33,16 +35,17 @@ public class Boss : MonoBehaviour
     private bool isTurning = false;
     private float nextAttackTime = 0f;
     private int currentDirection = 1; // 1 Derecha, -1 Izquierda
-
+    private AudioSource playerAudio;
     // NUEVO: objeto que se activará al morir
     public GameObject objectToActivateOnDeath;
-
+    private Coroutine hitFlashCoroutine;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         bossMusic = GetComponent<AudioSource>();
+        playerAudio = player.GetComponent<AudioSource>();
     }
 
     void FixedUpdate()
@@ -62,7 +65,7 @@ public class Boss : MonoBehaviour
         float distanceY = Mathf.Abs(transform.position.y - player.position.y);
         float totalDistance = Vector3.Distance(transform.position, player.position);
 
-        // LÓGICA DE ATAQUE CORREGIDA
+
         if (distanceX <= attackRange && distanceY < 3.0f)
         {
             animator.SetBool("isWalking", false);
@@ -78,7 +81,8 @@ public class Boss : MonoBehaviour
             if (!bossMusic.isPlaying)
             {
                 bossMusic.Play();
-                MusicManager.Instance.StopMusic();
+                playerAudio.Stop();
+                
             }
             MoveToPlayer();
         }
@@ -87,7 +91,7 @@ public class Boss : MonoBehaviour
             if (bossMusic.isPlaying)
             {
                 bossMusic.Stop();
-                MusicManager.Instance.PlayMusic();
+                playerAudio.Play();
 
             }
             animator.SetBool("isWalking", false);
@@ -112,46 +116,33 @@ public class Boss : MonoBehaviour
 
     IEnumerator SequenceAttack()
     {
-        // 1. Tiempo de espera: Debe ser igual a la duración de tu clip de ataque
-        // Mira en Unity cuánto dura tu animación (ej. 0.8s) y ponlo aquí.
+      
         yield return new WaitForSeconds(0.8f);
-
-        // 2. IMPORTANTE: Forzamos al Animator a volver a un estado neutro
         animator.ResetTrigger("attack");
-
-        // 3. Pequeña pausa de seguridad para que los logs no se saturen
         yield return new WaitForSeconds(0.2f);
 
         attacking = false;
     }
     public void AttackHit()
     {
-        Debug.Log("Procesando hit");
-        // 1. Verificación de seguridad
         if (attackZone == null)
         {
             Debug.LogError("¡No has asignado el objeto AttackZone en el Inspector!");
             return;
         }
-
-        // 2. Obtenemos los datos exactos del Collider del objeto Attack Zone
-        // Usamos el centro real en el mundo y sus dimensiones (extents)
         Vector3 center = attackZone.bounds.center;
         Vector3 halfExtents = attackZone.bounds.extents;
         Quaternion rotation = attackZone.transform.rotation;
 
-        // 3. Realizamos la detección física en esa caja exacta
         Collider[] hits = Physics.OverlapBox(center, halfExtents, rotation);
 
         bool hitDetected = false;
         foreach (var hit in hits)
         {
-            // Ignoramos al propio Boss si tiene el tag de Player por error (poco común)
             if (hit.transform == transform) continue;
 
             if (hit.CompareTag("Player"))
             {
-                // Buscamos el script Player en el objeto o sus padres
                 Player p = hit.GetComponent<Player>() ?? hit.GetComponentInParent<Player>();
 
                 if (p != null)
@@ -214,53 +205,91 @@ public class Boss : MonoBehaviour
     }
 
     public void TakeDamage(int dmg)
-    {
+    {   
+        if (iframe) return;
+        iframe = true;
         health -= dmg;
         StartCoroutine(HitFlash());
         if (health <= 0) StartCoroutine(DieByDamage());
+        StartCoroutine(InvulnerabilityCooldown());
     }
 
-    IEnumerator HitFlash()
+   IEnumerator HitFlash()
     {
-        if (_spriteRenderer != null)
+        if (_spriteRenderer == null) yield break;
+
+        // Si hay un flash en curso, lo detenemos y restauramos color
+        if (hitFlashCoroutine != null)
         {
-            Color originalColor = _spriteRenderer.color;
-            _spriteRenderer.color = Color.red;
-            yield return new WaitForSeconds(0.15f);
-            _spriteRenderer.color = originalColor;
+            StopCoroutine(hitFlashCoroutine);
+            _spriteRenderer.color = Color.white; // restaurar color base
         }
+
+        hitFlashCoroutine = StartCoroutine(HitFlashRoutine());
     }
+
+    private IEnumerator HitFlashRoutine()
+    {
+        Color originalColor = _spriteRenderer.color;
+        _spriteRenderer.color = Color.red; // cambia a rojo
+
+        yield return new WaitForSeconds(0.15f); // duración del flash
+
+        _spriteRenderer.color = originalColor; // restaurar color
+
+        hitFlashCoroutine = null; // liberamos la referencia
+    }
+
 
     IEnumerator DieByDamage()
     {
-        bossMusic.PlayOneShot(deathCat);
-        MusicManager.Instance.PlayMusic();
         dead = true;
+
+        rb.linearVelocity = Vector3.zero;
+
         animator.SetBool("isWalking", false);
-        if (GetComponent<Collider>()) GetComponent<Collider>().enabled = false;
+        animator.SetTrigger("die");
+        rb.constraints = RigidbodyConstraints.FreezeAll;
 
-        // Efecto de aplastamiento
-        Vector3 originalScale = transform.localScale;
-        Vector3 targetScale = new Vector3(originalScale.x, originalScale.y * 0.2f, originalScale.z);
-
-        float duration = 0.5f;
-        float t = 0f;
-
-        while (t < duration)
-        {
-            t += Time.deltaTime;
-            transform.localScale = Vector3.Lerp(originalScale, targetScale, t / duration);
-            yield return null;
-        }
+        bossMusic.PlayOneShot(deathCat);
+        bossMusic.Stop();
+        
 
         if (objectToActivateOnDeath != null)
         {
-            objectToActivateOnDeath.transform.position = transform.position;
             objectToActivateOnDeath.SetActive(true);
         }
 
-        bossMusic.Stop();
-
-        Destroy(gameObject);
+        yield break;
     }
+    private IEnumerator InvulnerabilityCooldown()
+    {
+        yield return new WaitForSeconds(0.3f);
+        iframe = false;
+    }
+
+   public void FreezeAnimation()
+    {
+        animator.enabled = false;
+    }
+
+   private void OnCollisionStay(Collision collision)
+    {
+        if (dead) return;
+
+        // Filtramos solo al jugador
+        if (!collision.collider.CompareTag("Player")) return;
+         Debug.Log("<color=red>Toca.</color>");
+        Player p = collision.collider.GetComponent<Player>();
+        if (p == null) return;
+
+        // Cooldown para no spamear daño
+        if (Time.time - lastAttackTime >= attackCooldown_contact)
+        {
+            lastAttackTime = Time.time;
+            p.TakeDamage(damage, transform.position);
+            Debug.Log("<color=red>Daño por contacto aplicado al jugador.</color>");
+        }
+    }
+
 }

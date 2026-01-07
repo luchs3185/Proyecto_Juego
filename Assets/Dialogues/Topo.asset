@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f929702595ca8a4eba2b084690201f7, type: 3}
+  m_Name: Topo
+  m_EditorClassIdentifier: Proyecto_Juego.Runtime::Dialogue
+  dialogueLines:
+  - name: Gideon
+    line: "No te acerques tanto.\nNo veo\u2026\npero escucho muy bien."
+  - name: Gideon
+    line: "Ah\u2026 finalmente\u2026 el camino est\xE1 libre.\nGracias a ti, estas
+      alcantarillas ya no nos tienen prisioneros."
+  - name: Gideon
+    line: "Siente la tierra.\nNo es solo barro\u2026\nson los antiguos pasajes de
+      la ciudad."
+  - name: Gideon
+    line: "Con esto puedes abrir agujeros\u2026\no desaparecer bajo los pies de quien
+      te persigue."
+  - name: Gideon
+    line: "Recuerda, peque\xF1a rata:\nlo que est\xE1 abajo tambi\xE9n puede salvarte."
