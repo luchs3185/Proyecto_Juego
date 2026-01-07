@@ -13,7 +13,19 @@ MonoBehaviour:
   m_Name: Rata
   m_EditorClassIdentifier: Proyecto_Juego.Runtime::Dialogue
   dialogueLines:
-  - name: Rat
-    line: Tengo que encontrar comida antes de que oscurezca.
-  - name: Rat
-    line: Toma este objeto
+  - name: ???
+    line: "\u2026\xBFOtra\u2026?\nPens\xE9 que ya no quedaba nadie."
+  - name: ???
+    line: "No recuerdo mi nombre.\nSolo recuerdo correr\u2026 correr muy r\xE1pido."
+  - name: ???
+    line: "Un d\xEDa despertamos\u2026 y el mundo estaba vac\xEDo."
+  - name: ???
+    line: 'No fue hambre.
+
+      No fue enfermedad.'
+  - name: ???
+    line: "Algo nos llam\xF3\u2026\ny los que escucharon, se fueron."
+  - name: ???
+    line: "Yo ya no puedo\u2026\npero t\xFA s\xED."
+  - name: ???
+    line: "Corre por los que ya no est\xE1n.\n"

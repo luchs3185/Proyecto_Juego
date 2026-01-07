@@ -189,6 +189,7 @@ public class Player : MonoBehaviour
     {
         if (other.CompareTag(waterTag))
         {
+            Debug.Log("TOCA AGUA");
             touchWater = true;
             TakeDamageWater();
         }
@@ -390,7 +391,9 @@ public class Player : MonoBehaviour
 
     private void StartDig()
     {
-        audioSource.PlayOneShot(digSound);
+         audioSource.clip = digSound; // asignamos el clip
+        audioSource.loop = true;      // opcional, si quieres que se repita mientras excavas
+        audioSource.Play();
         isDigging = true;
         gameObject.layer = LayerMask.NameToLayer(undergroundLayer);
         _rigidBody.useGravity = false;
@@ -415,6 +418,8 @@ public class Player : MonoBehaviour
 
     private void StopDig()
     {
+          audioSource.Stop();
+        audioSource.loop = false;
         isDigging = false;
         gameObject.layer = LayerMask.NameToLayer(normalLayer);
         foreach (var c in myColliders)
@@ -679,7 +684,6 @@ public class Player : MonoBehaviour
 
     private void RespawnAtClosest()
     {
-        MusicManager.Instance.PlayMusic();
 
         Transform respawn = GetClosestRespawnPoint();
 
@@ -793,13 +797,25 @@ public class Player : MonoBehaviour
 
         foreach (var hit in hits)
         {
+            // ENEMIGO NORMAL
             EnemyController enemy = hit.GetComponentInParent<EnemyController>();
             if (enemy != null)
             {
                 enemy.TakeDamage(meleeDamage);
                 hitSomething = true;
+                continue;
+            }
+
+            // BOSS
+            Boss boss = hit.GetComponentInParent<Boss>();
+            if (boss != null)
+            {
+                Debug.Log("recibe daño");
+                boss.TakeDamage(meleeDamage);
+                hitSomething = true;
             }
         }
+
 
         // HITSTOP SOLO SI CONECTAS
         if (hitSomething)

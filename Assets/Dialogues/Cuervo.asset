@@ -13,8 +13,18 @@ MonoBehaviour:
   m_Name: Cuervo
   m_EditorClassIdentifier: Proyecto_Juego.Runtime::Dialogue
   dialogueLines:
-  - name: Cuervo
-    line: "\"Los secretos del bosque vuelan m\xE1s r\xE1pido de lo que crees\u2026
-      presta atenci\xF3n a lo que nadie dice.\""
-  - name: Cuervo
-    line: Toma este pbjeto
+  - name: Kenku
+    line: "\xA1CRAA!\n\xA1Rata viva!\nEso s\xED que no se ve todos los d\xEDas."
+  - name: Kenku
+    line: "La ciudad est\xE1 muerta\u2026\npero a\xFAn hace eco.\n\xBFLo oyes?"
+  - name: Kenku
+    line: "(imita voces humanas distorsionadas)\n\u201CEvacuaci\xF3n inmediata\u2026\u201D\n\u201CNo
+      miren atr\xE1s\u2026\u201D"
+  - name: Kenku
+    line: "Los de tu especie desaparecieron r\xE1pido.\n\xA1Puf!"
+  - name: Kenku
+    line: "Caminar es de los que se rinden.\nSaltar\u2026\nes de los curiosos."
+  - name: Kenku
+    line: "Salta una vez.\nLuego\u2026 decide que el suelo ya no manda."
+  - name: Kenku
+    line: "\xA1CRAA!\nLas alturas guardan secretos."
