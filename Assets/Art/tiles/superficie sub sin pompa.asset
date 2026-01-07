@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
-  m_Name: 1_Animated_Tile_Water
+  m_Name: superficie sub sin pompa
   m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.AnimatedTile
   m_AnimatedSprites:
-  - {fileID: 40249388, guid: 515f65eb982bc0c46a7464ec4f35ff14, type: 3}
-  - {fileID: -927332257, guid: e313caae23bd06e4e9b4ab3adfc2ce3b, type: 3}
-  - {fileID: 200338262, guid: 7240b22389309de4ebee3895c8d25c09, type: 3}
+  - {fileID: 1768711620, guid: d99a2d3c56adcd04b9933772ab214d44, type: 3}
+  - {fileID: 966042100, guid: 8dbf12152d1b29d4b9007f2a6458eb7b, type: 3}
+  - {fileID: 1287152932, guid: 2b1c657d106f3ff4c902f676e2e63367, type: 3}
   m_MinSpeed: 3
   m_MaxSpeed: 3
   m_AnimationStartTime: 0
