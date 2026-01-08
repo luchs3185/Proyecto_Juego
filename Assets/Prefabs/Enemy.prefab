@@ -72,13 +72,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Proyecto_Juego.Runtime::EnemyController
   player: {fileID: 0}
   detectionRadius: 10
-  speed: 3
+  speed: 2.95
   health: 1
   damage: 1
   attackCooldown: 1
   walkableSpace: {fileID: 0}
-  moveSound: {fileID: 8300000, guid: 95ba048c81029ca49941d5adb18d1a62, type: 3}
-  deathSound: {fileID: 8300000, guid: 6168b8990d915caa1a13d89fed72e3d0, type: 3}
+  moveSound: {fileID: 8300000, guid: f50dcf1bca435af4f9000b446f4336ac, type: 3}
+  deathSound: {fileID: 8300000, guid: 39b4917921256d84eb43b188d2c54123, type: 3}
 --- !u!54 &5515595964561184203
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -197,8 +197,8 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_Resource: {fileID: 8300000, guid: f50dcf1bca435af4f9000b446f4336ac, type: 3}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -208,9 +208,9 @@ AudioSource:
   Priority: 175
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 20
+  MaxDistance: 9.1
   Pan2D: 0
-  rolloffMode: 1
+  rolloffMode: 0
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0

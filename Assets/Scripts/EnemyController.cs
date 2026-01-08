@@ -12,7 +12,7 @@ public class EnemyController : MonoBehaviour
     private Vector3 movement;
     private Collider col;
     private bool dead = false;
-
+    public float soundRadius = 15.0f; // rango a partir del cual se reproduce el sonido
     public int damage = 1;
     public float attackCooldown = 1f;
     private float lastAttackTime = 0f;
@@ -46,52 +46,73 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+   void FixedUpdate()
+{
+    if (dead || player == null) return;
+
+    float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+    // --- Determinar movimiento ---
+    if (distanceToPlayer <= detectionRadius)
     {
-        if (dead || player == null) return;
+        // Perseguir jugador
+        Vector3 direction = (player.position - transform.position).normalized;
+        movement = new Vector3(direction.x, 0, direction.z);
+    }
+    else
+    {
+        // Patrullar
+        movement = new Vector3(patrolDirection, 0, 0);
+    }
 
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+    // --- Voltear sprite ---
+    if (movement.x > 0.1f) _spriteRenderer.flipX = true;
+    else if (movement.x < -0.1f) _spriteRenderer.flipX = false;
 
-        if (distanceToPlayer <= detectionRadius)
+    // --- Calcular siguiente posición ---
+    Vector3 nextPosition = rb.position + movement * speed * Time.fixedDeltaTime;
+
+    bool canMove = true;
+    if (walkableCollider != null)
+    {
+        if (walkableCollider.bounds.Contains(nextPosition))
         {
-            Vector3 direction = (player.position - transform.position).normalized;
-            movement = new Vector3(direction.x, 0, direction.z);
+            rb.MovePosition(nextPosition);
         }
         else
         {
-            movement = new Vector3(patrolDirection, 0, 0);
-        }
-        if (movement.x > 0.1f)
-        {
-            _spriteRenderer.flipX = true;
-        }
-        else if (movement.x < -0.1f)
-        {
-            _spriteRenderer.flipX = false;
-        }
-
-        Vector3 nextPosition = rb.position + movement * speed * Time.fixedDeltaTime;
-
-        if (walkableCollider != null)
-        {
-            if (walkableCollider.bounds.Contains(nextPosition))
-            {
-                rb.MovePosition(nextPosition);
-            }
-            else if (distanceToPlayer > detectionRadius)
-            {
+            canMove = false;
+            if (distanceToPlayer > detectionRadius)
                 patrolDirection *= -1;
-            }
-        }
-        if (Time.time - lastMoveTime >= soundCooldown)
-        {
-            if (!audioSource.isPlaying)
-            {
-                audioSource.PlayOneShot(moveSound,0.3f);
-                lastMoveTime = Time.time;
-            }
         }
     }
+    else
+    {
+        rb.MovePosition(nextPosition);
+    }
+
+    // --- Reproducir sonido solo si se mueve y está cerca del jugador ---
+    bool isMoving = movement.magnitude > 0.01f && canMove;
+
+   if (isMoving && distanceToPlayer <= soundRadius)
+    {
+        if (!audioSource.isPlaying)
+        {
+            audioSource.clip = moveSound;
+            audioSource.loop = true;
+            audioSource.volume = 0.3f;
+            audioSource.Play();
+        }
+    }
+    else
+    {
+        if (audioSource.isPlaying)
+        {
+            audioSource.Stop();
+        }
+    }
+
+}
 
     public void TakeDamage(int amount)
     {

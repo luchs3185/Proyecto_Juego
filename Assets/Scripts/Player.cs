@@ -127,7 +127,7 @@ public class Player : MonoBehaviour
     {
         transform.rotation = Quaternion.identity;
         direction = playerInput.actions["Movement"].ReadValue<float>();
-
+        
         if (playerInput.actions["reset"].triggered) //se vuelve al inicio
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -204,7 +204,19 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         float targetX;
+        Vector3 pos = _rigidBody.position;
+        pos.z = 0f;
+        _rigidBody.position = pos;
 
+        Vector3 vel = _rigidBody.linearVelocity;
+        vel.z = 0f;
+        _rigidBody.linearVelocity = vel;
+
+        Vector3 ang = _rigidBody.angularVelocity;
+        ang.x = 0f;
+        ang.y = 0f;
+        ang.z = 0f;
+        _rigidBody.angularVelocity = ang;
         if (!isDashing)
         {
             if (Mathf.Abs(moveInput) > 0.01f)
@@ -228,6 +240,13 @@ public class Player : MonoBehaviour
             }
         }
     }
+
+    void LateUpdate()
+{
+    Vector3 pos = transform.position;
+    pos.z = 0f;
+    transform.position = pos;
+}
 
     void OnCollisionEnter(Collision collision)
     {
