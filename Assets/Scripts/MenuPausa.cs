@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI; // Necesario para manipular la UI
 
 public class MenuPausa : MonoBehaviour
 {
@@ -12,18 +13,19 @@ public class MenuPausa : MonoBehaviour
     [Header("UI Controles")]
     [SerializeField] private GameObject menuControles;
 
+    // --- MÉTODOS DE PAUSA (Igual que antes) ---
     public void Pausar()
     {
         Time.timeScale = 0f;
-        botonPausa.SetActive(false); //el boton de pausa desaparece
-        menuPausa.SetActive(true); //el menu de pausa aparece
+        botonPausa.SetActive(false);
+        menuPausa.SetActive(true);
     }
 
     public void Reanudar()
     {
         Time.timeScale = 1f;
-        botonPausa.SetActive(true); //el boton de pausa aparece
-        menuPausa.SetActive(false); //el menu de pausa desaparece
+        botonPausa.SetActive(true);
+        menuPausa.SetActive(false);
     }
 
     public void Reiniciar()
@@ -34,8 +36,7 @@ public class MenuPausa : MonoBehaviour
 
     public void ToggleEasyMode()
     {
-
-     player.easyMode=!player.easyMode;   
+        player.easyMode = !player.easyMode;   
     }
 
     public void Cerrar()
@@ -43,35 +44,39 @@ public class MenuPausa : MonoBehaviour
         Application.Quit(); 
     }
    
-    //para mapa de controles
+    // --- MAPA DE CONTROLES (Igual que antes) ---
     public void AbrirControles()
     {
-        menuPausa.SetActive(false); //el menu de pausa desaparece
-        menuControles.SetActive(true); //el menu de controles aparece
+        menuPausa.SetActive(false);
+        menuControles.SetActive(true);
     }
 
     public void CerrarControles()
     {
-        menuControles.SetActive(false); //el menu de controles desaparece
-        menuPausa.SetActive(true); //el menu de pausa aparece
+        menuControles.SetActive(false);
+        menuPausa.SetActive(true);
     }
 
+    // --- ACCESIBILIDAD (AQUÍ ESTÁ LA NUEVA LÓGICA) ---
     [Header("UI Accesibilidad")]
     [SerializeField] private GameObject menuAccesibilidad;
-    [SerializeField] private UnityEngine.UI.Image botonInvencibilidadImg;
-    [SerializeField] private UnityEngine.UI.Image botonDaltonismoImg;
+    [SerializeField] private Image botonInvencibilidadImg;
+    [SerializeField] private Image botonDaltonismoImg;
+    
+    // Opcional: Si quieres mostrar texto diciendo qué modo es (ej: "Protanopia")
+    [SerializeField] private Text textoDaltonismo; 
 
     public void AbrirAccesibilidad()
     {
-        menuPausa.SetActive(false); //el menu de pausa desaparece
-        menuAccesibilidad.SetActive(true); //el menu de accesibilidad aparece
-        UpdateAccessibilityUI();
+        menuPausa.SetActive(false);
+        menuAccesibilidad.SetActive(true);
+        UpdateAccessibilityUI(); // Actualiza visualmente los botones al abrir
     }
 
     public void CerrarAccesibilidad()
     {
-        menuAccesibilidad.SetActive(false); //el menu de accesibilidad desaparece
-        menuPausa.SetActive(true); //el menu de pausa aparece
+        menuAccesibilidad.SetActive(false);
+        menuPausa.SetActive(true);
     }
 
     public void ToggleInvencibilidad()
@@ -82,18 +87,45 @@ public class MenuPausa : MonoBehaviour
 
     public void ToggleDaltonismo()
     {
-        // Aquí iría la lógica futura de daltonismo
-        // player.daltonismo = !player.daltonismo;
+        // 1. Obtenemos el índice actual guardado en PlayerPrefs (por defecto 0)
+        int currentIndex = PlayerPrefs.GetInt("ColorPaletteIndex", 0);
+
+        // 2. Calculamos el siguiente índice (0 -> 1 -> 2 -> 3 -> 0)
+        // El operador % 4 asegura que si llega a 4, vuelva a 0.
+        int nextIndex = (currentIndex + 1) % 4;
+
+        // 3. Le decimos al Manager que cambie la paleta
+        if (ColorPaletteManager.Instance != null)
+        {
+            ColorPaletteManager.Instance.SetPalette(nextIndex);
+        }
+
+        // 4. Actualizamos la UI para reflejar el cambio
         UpdateAccessibilityUI();
     }
 
     private void UpdateAccessibilityUI()
     {
-        // Cambiar color para indicar ON/OFF (Blanco = OFF, Verde = ON)
+        // --- Feedback Visual Invencibilidad ---
         if (botonInvencibilidadImg != null)
             botonInvencibilidadImg.color = player.invencible ? Color.green : Color.white;
             
-        // if (botonDaltonismoImg != null)
-        //    botonDaltonismoImg.color = player.daltonismo ? Color.green : Color.white; // Descomentar cuando exista
+        // --- Feedback Visual Daltonismo ---
+        if (botonDaltonismoImg != null)
+        {
+            // Leemos qué modo está activo actualmente
+            int currentIndex = PlayerPrefs.GetInt("ColorPaletteIndex", 0);
+
+            // Si el índice es 0 (Normal), botón blanco. Si es > 0 (Daltónico), botón verde.
+            botonDaltonismoImg.color = (currentIndex == 0) ? Color.white : Color.green;
+        }
+
+        // (Opcional) Actualizar texto si tienes una referencia de Texto
+        if (textoDaltonismo != null)
+        {
+            string[] nombresModos = { "Normal", "Protanopia", "Deuteranopia", "Tritanopia" };
+            int index = PlayerPrefs.GetInt("ColorPaletteIndex", 0);
+            textoDaltonismo.text = nombresModos[index]; // Muestra el nombre del modo
+        }
     }
 }
