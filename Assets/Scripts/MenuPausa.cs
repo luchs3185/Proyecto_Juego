@@ -80,20 +80,30 @@ public class MenuPausa : MonoBehaviour
         UpdateAccessibilityUI();
     }
 
+    [SerializeField] private GameObject menuPaletteSelector;
+
+    public void AbrirPaletteSelector()
+    {
+        if (menuPaletteSelector == null) return;
+        menuAccesibilidad.SetActive(false);
+        menuPaletteSelector.SetActive(true);
+    }
+
+    public void CerrarPaletteSelector()
+    {
+        if (menuPaletteSelector == null) return;
+        menuPaletteSelector.SetActive(false);
+        menuAccesibilidad.SetActive(true);
+    }
+
     public void ToggleDaltonismo()
     {
-        // Aquí iría la lógica futura de daltonismo
-        // player.daltonismo = !player.daltonismo;
-        UpdateAccessibilityUI();
+        AbrirPaletteSelector();
     }
 
     private void UpdateAccessibilityUI()
     {
-        // Cambiar color para indicar ON/OFF (Blanco = OFF, Verde = ON)
         if (botonInvencibilidadImg != null)
             botonInvencibilidadImg.color = player.invencible ? Color.green : Color.white;
-            
-        // if (botonDaltonismoImg != null)
-        //    botonDaltonismoImg.color = player.daltonismo ? Color.green : Color.white; // Descomentar cuando exista
     }
 }

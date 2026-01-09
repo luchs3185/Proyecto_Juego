@@ -3,4 +3,5 @@
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Tests.EditMode.csproj" />
   <Project Path="Proyecto_Juego.Runtime.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
 </Solution>
