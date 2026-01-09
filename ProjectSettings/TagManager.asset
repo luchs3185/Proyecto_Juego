@@ -12,6 +12,7 @@ TagManager:
   - RespawnPoint
   - life
   - wallkableEnemy
+  - RespawnPointDeath
   layers:
   - Default
   - TransparentFX

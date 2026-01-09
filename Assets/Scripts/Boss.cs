@@ -7,7 +7,7 @@ public class Boss : MonoBehaviour
     public Transform player;
     public float detectionRadius = 10.0f;
     public float speed = 4.0f;
-    public int health = 1;
+    public int health = 10;
     public AudioClip angryCat;
     public AudioClip deathCat;
 
