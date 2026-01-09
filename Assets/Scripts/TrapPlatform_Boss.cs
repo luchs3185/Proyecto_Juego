@@ -5,6 +5,7 @@ public class TrapPlatform_Boss : MonoBehaviour
     [Header("Tiempo antes de desaparecer")]
     public float disappearDelay = 0.8f; // segundos antes de desaparecer
     public GameObject objectToActivateOnDeath;
+    public GameObject Respawn;
     private bool triggered = false;
 
     private void OnCollisionEnter(Collision collision)
@@ -22,6 +23,10 @@ public class TrapPlatform_Boss : MonoBehaviour
         if (objectToActivateOnDeath != null)
         {
             objectToActivateOnDeath.SetActive(true);
+        }
+        if (Respawn != null)
+        {
+            Respawn.SetActive(true);
         }
         gameObject.SetActive(false); // desaparece
     }

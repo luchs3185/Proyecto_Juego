@@ -25,6 +25,6 @@ MonoBehaviour:
   - name: Kenku
     line: "Caminar es de los que se rinden.\nSaltar\u2026\nes de los curiosos."
   - name: Kenku
-    line: "Salta una vez.\nLuego\u2026 decide que el suelo ya no manda."
+    line: "Salta una vez.\nLuego\u2026 salta de nuevo en el aire."
   - name: Kenku
     line: "\xA1CRAA!\nLas alturas guardan secretos."

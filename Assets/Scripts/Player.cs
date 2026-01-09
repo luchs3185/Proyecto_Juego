@@ -105,10 +105,10 @@ public class Player : MonoBehaviour
     //TAGS
     private string groundTag = "Ground";
     private readonly string waterTag = "Water";
-
+    public Transform FINAL_BOSS;
     [Header("UI")]
     public LifeBarController lifeBar;
-
+    Boss boss;
 
 
     void Start()
@@ -119,7 +119,7 @@ public class Player : MonoBehaviour
         myColliders = GetComponentsInChildren<Collider>();
         jumpsRemaining = maxJumps;
         audioSource=GetComponent<AudioSource>();
-
+        boss = FINAL_BOSS.GetComponent<Boss>();
 
     }
 
@@ -645,8 +645,15 @@ public class Player : MonoBehaviour
                 RespawnAtClosest();
                 StartCoroutine(InvulnerabilityCooldown());
             }
-            else
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            else{
+                life = maxLife;
+                if (lifeBar != null) lifeBar.UpdateLife(life);
+                boss.health = 10;
+                RespawnAtClosestDeth();
+                StartCoroutine(InvulnerabilityCooldown());
+            }
+                
+                
         }
     }
 
@@ -673,8 +680,13 @@ public class Player : MonoBehaviour
                 RespawnAtClosest();
                 StartCoroutine(InvulnerabilityCooldown());
             }
-            else
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            else{
+                life = maxLife;
+                if (lifeBar != null) lifeBar.UpdateLife(life);
+                boss.health = 10;
+                RespawnAtClosestDeth();
+                StartCoroutine(InvulnerabilityCooldown());
+            }
         }
         else
         {
@@ -715,9 +727,45 @@ public class Player : MonoBehaviour
         StartCoroutine(RespawnDelay());
     }
 
+    private void RespawnAtClosestDeth()
+    {
+
+        Transform respawn = GetClosestRespawnPointDeath();
+
+        if (respawn != null)
+        {
+            _rigidBody.linearVelocity = Vector3.zero;
+            transform.position = respawn.position;
+        }
+
+        StartCoroutine(RespawnDelay());
+    }
+
     private Transform GetClosestRespawnPoint()
     {
         GameObject[] respawns = GameObject.FindGameObjectsWithTag("RespawnPoint");
+
+        Transform closest = null;
+        float minDistance = Mathf.Infinity;
+        Vector3 currentPos = transform.position;
+
+        foreach (GameObject r in respawns)
+        {
+            float dist = Vector3.Distance(currentPos, r.transform.position);
+
+            if (dist < minDistance)
+            {
+                minDistance = dist;
+                closest = r.transform;
+            }
+        }
+        return closest;
+    }
+
+
+    private Transform GetClosestRespawnPointDeath()
+    {
+        GameObject[] respawns = GameObject.FindGameObjectsWithTag("RespawnPointDeath");
 
         Transform closest = null;
         float minDistance = Mathf.Infinity;
