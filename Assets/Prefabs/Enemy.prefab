@@ -74,6 +74,7 @@ MonoBehaviour:
   detectionRadius: 10
   speed: 2.95
   health: 1
+  soundRadius: 13
   damage: 1
   attackCooldown: 1
   walkableSpace: {fileID: 0}
