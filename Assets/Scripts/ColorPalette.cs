@@ -1,23 +1,14 @@
 using UnityEngine;
 
-[System.Serializable]
-public class ColorSet
-{
-    public Color primary;
-    public Color secondary;
-    public Color ui;
-    public Color uiAccent;
-}
-
-[CreateAssetMenu(fileName = "ColorPalette", menuName = "Accessibility/ColorPalette")]
+[CreateAssetMenu(fileName = "NuevaPaleta", menuName = "Accesibilidad/Paleta Daltonismo")]
 public class ColorPalette : ScriptableObject
 {
-    public ColorSet[] palettes = new ColorSet[4];
+    // 0: Normal, 1: Protanopia, 2: Deuteranopia, 3: Tritanopia
+    public ColorSet[] modos = new ColorSet[4];
 
-    public ColorSet GetColorSet(int index)
+    public ColorSet GetModo(int index)
     {
-        if (index < 0 || index >= palettes.Length)
-            return palettes[0];
-        return palettes[index];
+        if (index < 0 || index >= modos.Length) return modos[0];
+        return modos[index];
     }
 }

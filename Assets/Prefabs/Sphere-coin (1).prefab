@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1474945254194702744}
   - component: {fileID: 3614051182221918664}
   - component: {fileID: -3557985399221105495}
+  - component: {fileID: 2821902985858679439}
   m_Layer: 0
   m_Name: Sphere-coin (1)
   m_TagString: Untagged
@@ -125,3 +126,16 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &2821902985858679439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3102207797539025712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e40fb9057450ee14ca4b919736347511, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Proyecto_Juego.Runtime::ColorableElement
+  miRol: 3

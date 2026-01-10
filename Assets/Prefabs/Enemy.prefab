@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4083911201762344079}
   - component: {fileID: 8568619883190965099}
   - component: {fileID: 7527915276242368703}
-  - component: {fileID: 3803358664058209953}
+  - component: {fileID: -1208912909677131910}
   m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
@@ -285,7 +285,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3803358664058209953
+--- !u!114 &-1208912909677131910
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -296,4 +296,5 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e40fb9057450ee14ca4b919736347511, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Proyecto_Juego.Runtime::ColorableSpriteRenderer
+  m_EditorClassIdentifier: Proyecto_Juego.Runtime::ColorableElement
+  miRol: 1

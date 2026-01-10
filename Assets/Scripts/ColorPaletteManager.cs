@@ -1,9 +1,10 @@
 using UnityEngine;
+using System;
 
 public class ColorPaletteManager : MonoBehaviour
 {
     public static ColorPaletteManager Instance { get; private set; }
-    public System.Action OnPaletteChanged;
+    public event Action OnPaletteChanged;
 
     [SerializeField] private ColorPalette paletteAsset;
     private int currentPaletteIndex = 0;
@@ -17,28 +18,22 @@ public class ColorPaletteManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        
         currentPaletteIndex = PlayerPrefs.GetInt("ColorPaletteIndex", 0);
     }
 
     public void SetPalette(int index)
     {
-        if (index < 0 || index > 3) return;
         currentPaletteIndex = index;
         PlayerPrefs.SetInt("ColorPaletteIndex", index);
-        OnPaletteChanged?.Invoke();
+        
+        // Avisa a todos los objetos que deben cambiar de color
+        if (OnPaletteChanged != null) OnPaletteChanged.Invoke();
     }
 
     public ColorSet GetCurrentColors()
     {
-        if (paletteAsset == null)
-            return new ColorSet();
-        return paletteAsset.GetColorSet(currentPaletteIndex);
-    }
-
-    public ColorSet GetPaletteByIndex(int index)
-    {
-        if (paletteAsset == null)
-            return new ColorSet();
-        return paletteAsset.GetColorSet(index);
+        if (paletteAsset == null) return new ColorSet();
+        return paletteAsset.GetModo(currentPaletteIndex);
     }
 }
