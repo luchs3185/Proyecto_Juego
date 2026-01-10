@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI; // Necesario para manipular la UI
+using UnityEngine.UI;
 
 public class MenuPausa : MonoBehaviour
 {
@@ -13,7 +13,13 @@ public class MenuPausa : MonoBehaviour
     [Header("UI Controles")]
     [SerializeField] private GameObject menuControles;
 
-    // --- MÉTODOS DE PAUSA (Igual que antes) ---
+    [Header("UI Accesibilidad")]
+    [SerializeField] private GameObject menuAccesibilidad;
+    [SerializeField] private Image botonInvencibilidadImg;
+    [SerializeField] private Image botonDaltonismoImg;
+    [SerializeField] private Text textoDaltonismo; // Muestra: Normal, Protanopia, etc.
+
+    // --- MÉTODOS DE PAUSA ---
     public void Pausar()
     {
         Time.timeScale = 0f;
@@ -34,17 +40,12 @@ public class MenuPausa : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void ToggleEasyMode()
-    {
-        player.easyMode = !player.easyMode;   
-    }
-
     public void Cerrar()
     {
         Application.Quit(); 
     }
    
-    // --- MAPA DE CONTROLES (Igual que antes) ---
+    // --- MAPA DE CONTROLES ---
     public void AbrirControles()
     {
         menuPausa.SetActive(false);
@@ -57,20 +58,12 @@ public class MenuPausa : MonoBehaviour
         menuPausa.SetActive(true);
     }
 
-    // --- ACCESIBILIDAD (AQUÍ ESTÁ LA NUEVA LÓGICA) ---
-    [Header("UI Accesibilidad")]
-    [SerializeField] private GameObject menuAccesibilidad;
-    [SerializeField] private Image botonInvencibilidadImg;
-    [SerializeField] private Image botonDaltonismoImg;
-    
-    // Opcional: Si quieres mostrar texto diciendo qué modo es (ej: "Protanopia")
-    [SerializeField] private Text textoDaltonismo; 
-
+    // --- ACCESIBILIDAD ---
     public void AbrirAccesibilidad()
     {
         menuPausa.SetActive(false);
         menuAccesibilidad.SetActive(true);
-        UpdateAccessibilityUI(); // Actualiza visualmente los botones al abrir
+        UpdateAccessibilityUI(); 
     }
 
     public void CerrarAccesibilidad()
@@ -85,47 +78,46 @@ public class MenuPausa : MonoBehaviour
         UpdateAccessibilityUI();
     }
 
+    /// <summary>
+    /// Cambia cíclicamente entre: 0 (Normal), 1 (Protanopia), 2 (Deuteranopia), 3 (Tritanopia)
+    /// </summary>
     public void ToggleDaltonismo()
     {
-        // 1. Obtenemos el índice actual guardado en PlayerPrefs (por defecto 0)
+        // 1. Obtenemos el índice actual guardado en PlayerPrefs
         int currentIndex = PlayerPrefs.GetInt("ColorPaletteIndex", 0);
 
         // 2. Calculamos el siguiente índice (0 -> 1 -> 2 -> 3 -> 0)
-        // El operador % 4 asegura que si llega a 4, vuelva a 0.
         int nextIndex = (currentIndex + 1) % 4;
 
-        // 3. Le decimos al Manager que cambie la paleta
+        // 3. Le decimos al Manager que cambie la paleta globalmente
         if (ColorPaletteManager.Instance != null)
         {
             ColorPaletteManager.Instance.SetPalette(nextIndex);
         }
 
-        // 4. Actualizamos la UI para reflejar el cambio
+        // 4. Actualizamos la UI del menú
         UpdateAccessibilityUI();
     }
 
     private void UpdateAccessibilityUI()
     {
-        // --- Feedback Visual Invencibilidad ---
+        // Feedback Invencibilidad
         if (botonInvencibilidadImg != null)
             botonInvencibilidadImg.color = player.invencible ? Color.green : Color.white;
             
-        // --- Feedback Visual Daltonismo ---
+        // Feedback Daltonismo
+        int currentIndex = PlayerPrefs.GetInt("ColorPaletteIndex", 0);
+
         if (botonDaltonismoImg != null)
         {
-            // Leemos qué modo está activo actualmente
-            int currentIndex = PlayerPrefs.GetInt("ColorPaletteIndex", 0);
-
-            // Si el índice es 0 (Normal), botón blanco. Si es > 0 (Daltónico), botón verde.
+            // Si es modo Normal (0) blanco, si es cualquier daltónico verde
             botonDaltonismoImg.color = (currentIndex == 0) ? Color.white : Color.green;
         }
 
-        // (Opcional) Actualizar texto si tienes una referencia de Texto
         if (textoDaltonismo != null)
         {
-            string[] nombresModos = { "Normal", "Protanopia", "Deuteranopia", "Tritanopia" };
-            int index = PlayerPrefs.GetInt("ColorPaletteIndex", 0);
-            textoDaltonismo.text = nombresModos[index]; // Muestra el nombre del modo
+            string[] nombresModos = { "Modo: Normal", "Modo: Protanopia", "Modo: Deuteranopia", "Modo: Tritanopia" };
+            textoDaltonismo.text = nombresModos[currentIndex];
         }
     }
-}
+}   

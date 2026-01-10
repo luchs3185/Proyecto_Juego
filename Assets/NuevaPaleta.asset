@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bef6504ac68b654f9464452ab818704, type: 3}
+  m_Name: NuevaPaleta
+  m_EditorClassIdentifier: Proyecto_Juego.Runtime::ColorPalette
+  modos:
+  - nombreModo: 
+    jugador: {r: 1, g: 1, b: 1, a: 1}
+    enemigo: {r: 1, g: 0, b: 0, a: 1}
+    obstaculo: {r: 0, g: 0, b: 0, a: 1}
+    fondo: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    vida: {r: 0, g: 1, b: 0, a: 1}
+    uiPrincipal: {r: 1, g: 1, b: 1, a: 1}
+    uiAcento: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  - nombreModo: Protanopia
+    jugador: {r: 1, g: 1, b: 1, a: 1}
+    enemigo: {r: 0.9843137, g: 1, b: 0, a: 1}
+    obstaculo: {r: 0, g: 0.45490196, b: 0.8509804, a: 1}
+    fondo: {r: 0, g: 0.45490196, b: 0.8509804, a: 1}
+    vida: {r: 0, g: 1, b: 1, a: 1}
+    uiPrincipal: {r: 1, g: 1, b: 1, a: 1}
+    uiAcento: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  - nombreModo: Deuteranopia
+    jugador: {r: 1, g: 1, b: 1, a: 1}
+    enemigo: {r: 1, g: 0.8, b: 0, a: 1}
+    obstaculo: {r: 1, g: 0.52156866, b: 0.105882354, a: 1}
+    fondo: {r: 1, g: 0.52156866, b: 0.105882354, a: 1}
+    vida: {r: 0.18039216, g: 0.35686275, b: 1, a: 1}
+    uiPrincipal: {r: 1, g: 1, b: 1, a: 1}
+    uiAcento: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  - nombreModo: Tritanopia
+    jugador: {r: 1, g: 1, b: 1, a: 1}
+    enemigo: {r: 1, g: 0, b: 1, a: 1}
+    obstaculo: {r: 1, g: 1, b: 1, a: 1}
+    fondo: {r: 1, g: 1, b: 1, a: 1}
+    vida: {r: 1, g: 0.25490198, b: 0.21176471, a: 1}
+    uiPrincipal: {r: 1, g: 1, b: 1, a: 1}
+    uiAcento: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}

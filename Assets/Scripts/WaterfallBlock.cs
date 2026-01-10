@@ -22,9 +22,6 @@ public class WaterfallBlock : MonoBehaviour
         animator = GetComponent<Animator>();
 
         transform.position = startPosition;
-
-        if(animator!=null)
-            animator.Play("Waterfall_Fall",0,0f);
     }
 
     void Update()
@@ -50,8 +47,6 @@ public class WaterfallBlock : MonoBehaviour
         transform.position = startPosition;
         spriteRenderer.enabled = true;
 
-        if(animator!=null)
-            animator.Play("Waterfall_Fall",0,0f);
 
         isFalling = true;
     }
