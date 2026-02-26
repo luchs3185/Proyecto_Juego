@@ -15,6 +15,7 @@
   <Project Path="Unity.TestTools.CodeCoverage.Editor.OpenCover.Model.csproj" />
   <Project Path="Unity.Rider.Editor.csproj" />
   <Project Path="Unity.VisualScripting.State.Editor.csproj" />
+  <Project Path="Unity.InternalAPIEngineBridge.004.csproj" />
   <Project Path="Unity.TestTools.CodeCoverage.Editor.csproj" />
   <Project Path="Tests.PlayMode.csproj" />
   <Project Path="Unity.VisualScripting.State.csproj" />
@@ -27,7 +28,6 @@
   <Project Path="Tests.EditMode.csproj" />
   <Project Path="Unity.Play.Publisher.Editor.csproj" />
   <Project Path="Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection.csproj" />
-  <Project Path="Unity.2D.Sprite.AIIntegration.Editor.csproj" />
   <Project Path="Unity.2D.Tilemap.Extras.csproj" />
   <Project Path="Unity.Settings.Editor.csproj" />
   <Project Path="Unity.2D.Sprite.Editor.csproj" />
@@ -35,6 +35,7 @@
   <Project Path="Proyecto_Juego.Runtime.csproj" />
   <Project Path="Unity.InternalAPIEditorBridgeDev.001.csproj" />
   <Project Path="Unity.InputSystem.ForUI.csproj" />
+  <Project Path="UnityEditor.UI.Analytics.csproj" />
   <Project Path="Unity.VisualScripting.DocCodeExamples.csproj" />
   <Project Path="Unity.InputSystem.TestFramework.csproj" />
   <Project Path="Unity.VisualScripting.Shared.Editor.csproj" />
